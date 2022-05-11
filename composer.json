@@ -1,0 +1,23 @@
+{
+    "name": "sleekware/sleekware",
+    "description": "SleekwareDB is a NoSQL database storage service. A database storage service that can be used for various platforms and is easy to integrate.",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Imam Ali Mustofa",
+            "email": "ddarkterminal@pm.me"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "rakibtg/sleekdb": "^2.13"
+    },
+    "suggest": {
+        "paragonie/random_compat": "Provides better randomness in PHP 5.x"
+    },
+    "require-dev": {
+        "mikey179/vfsstream": "1.6.*",
+        "phpunit/phpunit": "4.* || 5.* || 9.*"
+    }
+}
