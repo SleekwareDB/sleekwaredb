@@ -7,6 +7,15 @@ What is SleekwareDB? SleekwareDB is a NoSQL database storage service. A database
 
 SleekwareDB is an Open Source project, anyone can contribute to build a better SleekwareDB for the future.
 
+## Features
+
+### 📂 Flat File Database
+Easy to manage flat file as database
+### 🖐️ REST API Operation
+CRUD data with Easy REST API
+### 😎 Cross Platform
+Integrate with any Platform
+
 ## Requirements
 
 - PHP >= 7.0
