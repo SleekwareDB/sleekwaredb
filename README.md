@@ -1,4 +1,8 @@
-# SleekWare
+<p align="center">
+	<img src="assets/img/logo-with-no-bg.png" width="245" height="60">
+</p>
+
+# SleekWareDB
 NoSQL API with [SleekDB](https://sleekdb.github.io/). This project was created as an alternative to the existing NoSQL database services on the Internet. [SleekDB](https://sleekdb.github.io/) is an API for File-based NoSQL database management built on top of the [SleekDB](https://sleekdb.github.io/).
 
 ## About
