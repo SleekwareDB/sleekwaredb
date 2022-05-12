@@ -1,100 +1,97 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-?><!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
+	<!-- Required meta tags -->
 	<meta charset="utf-8">
-	<title>Welcome to CodeIgniter</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<style type="text/css">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 
-	::selection { background-color: #E13300; color: white; }
-	::-moz-selection { background-color: #E13300; color: white; }
+	<title>SleekwareDB</title>
+	<meta name="description" content="SleekwareDB is a NoSQL database storage service. A database storage service that can be used for various platforms and is easy to integrate.">
+	<link rel="shortcut icon" href="<?= base_url('assets/img/logo-with-no-bg.png') ?>" type="image/png">
+	<style>
+		:root {
+			--primary: #4b6795;
+			--info: #149f92;
+		}
 
-	body {
-		background-color: #fff;
-		margin: 40px;
-		font: 13px/20px normal Helvetica, Arial, sans-serif;
-		color: #4F5155;
-	}
-
-	a {
-		color: #003399;
-		background-color: transparent;
-		font-weight: normal;
-		text-decoration: none;
-	}
-
-	a:hover {
-		color: #97310e;
-	}
-
-	h1 {
-		color: #444;
-		background-color: transparent;
-		border-bottom: 1px solid #D0D0D0;
-		font-size: 19px;
-		font-weight: normal;
-		margin: 0 0 14px 0;
-		padding: 14px 15px 10px 15px;
-	}
-
-	code {
-		font-family: Consolas, Monaco, Courier New, Courier, monospace;
-		font-size: 12px;
-		background-color: #f9f9f9;
-		border: 1px solid #D0D0D0;
-		color: #002166;
-		display: block;
-		margin: 14px 0 14px 0;
-		padding: 12px 10px 12px 10px;
-	}
-
-	#body {
-		margin: 0 15px 0 15px;
-		min-height: 96px;
-	}
-
-	p {
-		margin: 0 0 10px;
-		padding:0;
-	}
-
-	p.footer {
-		text-align: right;
-		font-size: 11px;
-		border-top: 1px solid #D0D0D0;
-		line-height: 32px;
-		padding: 0 10px 0 10px;
-		margin: 20px 0 0 0;
-	}
-
-	#container {
-		margin: 10px;
-		border: 1px solid #D0D0D0;
-		box-shadow: 0 0 8px #D0D0D0;
-	}
+		.jumbotron {
+			background-color: #149f92 !important;
+			color: white;
+		}
 	</style>
 </head>
+
 <body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="#">
+				<img src="<?= base_url('assets/img/logo-with-no-bg.png') ?>" width="145" height="30" class="d-inline-block align-top" alt="">
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item active">
+						<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">📖 Docs</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">🐙 Github</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
 
-<div id="container">
-	<h1>Welcome to CodeIgniter!</h1>
+	<header class="jumbotron jumbotron-fluid">
+		<div class="container">
+			<h1 class="display-4">SleekwareDB</h1>
+			<p class="lead">SleekwareDB is a NoSQL database storage service. A database storage service that can be used for various platforms and is easy to integrate.</p>
+			<small class="text-ligth">Built with <a href="https://sleekdb.github.io/" target="_blank" class="text-light">SleekDB</a> + <a href="https://github.com/bcit-ci/CodeIgniter" target="_blank" class="text-light">Codeigniter</a> + <a href="https://adminlte.io" target="_blank" class="text-light">AdminLTE</a> and ❤️</small> <br><br>
+			<button class="btn btn-outline-light mr-2">Get Started</button> <button class="btn btn-outline-light">Read Documentation</button>
+		</div>
+	</header>
 
-	<div id="body">
-		<p>The page you are looking at is being generated dynamically by CodeIgniter.</p>
+	<section class="container">
+		<h2 class="text-center mb-3">Features</h2>
+		<div class="row text-center">
+			<div class="col">
+				<div class="card">
+					<div class="card-body">
+						<h3>📂 <br> Flat File Database</h3>
+						<p>Easy to manage flat file as database</p>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card">
+					<div class="card-body">
+						<h3>🖐️ <br> REST API Operation</h3>
+						<p>CRUD data with Easy REST API</p>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card">
+					<div class="card-body">
+						<h3>😎 <br> Cross Platform</h3>
+						<p>Integrate with any Platform</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-		<p>If you would like to edit this page you'll find it located at:</p>
-		<code>application/views/welcome_message.php</code>
-
-		<p>The corresponding controller for this page is found at:</p>
-		<code>application/controllers/Welcome.php</code>
-
-		<p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="userguide3/">User Guide</a>.</p>
-	</div>
-
-	<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds. <?php echo  (ENVIRONMENT === 'development') ?  'CodeIgniter Version <strong>' . CI_VERSION . '</strong>' : '' ?></p>
-</div>
-
+	<!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
 </body>
+
 </html>
