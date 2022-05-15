@@ -3,11 +3,11 @@
 use SleekDB\Query;
 
 /**
- * @package Betta_Controller Load default configuration of application
- * @author Imam Ali Mustofa <bettadevindonesia@gmail.com>
+ * @package Sleekwaredb_Controller Load default configuration of application
+ * @author Imam Ali Mustofa <ddarkterminal@pm.me>
  * @version 1.0
  */
-class Betta_Controller extends CI_Controller
+class Sleekwaredb_Controller extends CI_Controller
 {
 
     const HTTP_OK             = 200;
@@ -32,12 +32,16 @@ class Betta_Controller extends CI_Controller
     {
         parent::__construct();
 
+        $this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
+
         // Define Model in Array Assoc
         $this->models = include APPPATH . '/loaders/models.php';
         $this->form_data = ($this->input->method() == 'post') ? $this->input->post(null, true) : $this->input->get(null,  true);
 
-        $this->load->library(['session', 'user_agent']);
+        $this->load->library(['session', 'user_agent', 'encryption']);
         $this->load->helper(['url', 'html', 'form', 'app']);
+
+        $this->encryption->initialize(array('driver' => 'openssl'));
 
         // default sleekDB configurations
         $this->sleekDBConfig = [

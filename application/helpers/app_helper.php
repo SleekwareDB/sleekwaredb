@@ -3,6 +3,59 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 use GuzzleHttp\Client;
 
+if (!function_exists('scanAdminLteAssetFiles')) {
+    function scanAdminLteAssetFiles($dir, &$results = array())
+    {
+        $files = scandir($dir);
+
+        foreach ($files as $value) {
+            $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
+            if (!is_dir($path)) {
+                $results[] = $path;
+            } else if ($value != "." && $value != ".." && $value != "index.html") {
+                scanAdminLteAssetFiles($path, $results);
+                $results[] = $path;
+            }
+        }
+
+        $results = array_filter($results, function ($v) {
+            return !is_dir($v) === true && strpos($v, 'index.html') === false && strpos($v, '.map') === false;
+        });
+
+        $arrayKey = [];
+        foreach ( $results as $alias ) {
+            array_push($arrayKey, basename($alias));
+        }
+
+        $arrayValue = array_map(function ($v) {
+            return str_replace(FCPATH, '', $v);
+        }, $results);
+
+        $results = array_combine($arrayKey, $arrayValue);
+
+        return $results;
+    }
+}
+
+if (!function_exists('adminlte_loader')) {
+    function adminlte_loader()
+    {
+        $CI = get_instance();
+        $CI->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
+
+        $modelDir = FCPATH . 'assets' . DIRECTORY_SEPARATOR . 'adminlte' . DIRECTORY_SEPARATOR;
+
+        $cacheResults = $CI->cache->get('adminlte_loader');
+        if (!$cacheResults) {
+            $listOfFiles = scanAdminLteAssetFiles($modelDir);
+            $CI->cache->save('adminlte_loader', $listOfFiles, 86400);
+        } else {
+            $listOfFiles = $cacheResults;
+        }
+        return $listOfFiles;
+    }
+}
+
 if (!function_exists('adminlte')) {
 
     /**
@@ -10,12 +63,13 @@ if (!function_exists('adminlte')) {
      * @param string $uri  memuat posisi file yang disimpan dalam folder asset Admin LTE
      * @param $asset
      */
-    function adminlte(string $uri, $asset = false)
+    function adminlte(string $filename, $asset = false)
     {
+        $filepath = adminlte_loader()[$filename];
         if ($asset == false) {
-            return link_tag('assets/adminlte/' . ltrim($uri, '/'));
+            return link_tag($filepath);
         } else {
-            return base_url('assets/adminlte/' . ltrim($uri, '/'));
+            return base_url($filepath);
         }
     }
 }
@@ -157,8 +211,8 @@ if (!function_exists('need_login')) {
     function need_login()
     {
         $CI = &get_instance();
-        if (!$CI->session->userdata('is_login')) {
-            redirect(base_url());
+        if (!$CI->session->userdata('databaseName')) {
+            redirect(base_url('/auth_signin'));
         }
     }
 }
@@ -353,6 +407,13 @@ if (!function_exists('idr_format')) {
     function idr_format($number, $prefix = false, $decimal_number = 0, $decimal_point = ',', $thousand_point = '.')
     {
         return ($prefix == false) ? number_format($number, $decimal_number, $decimal_point, $thousand_point) : 'Rp. ' . number_format($number, $decimal_number, $decimal_point, $thousand_point);
+    }
+}
+
+if (!function_exists('hyphenate')) {
+    function hyphenate($str, $number)
+    {
+        return implode("-", str_split($str, $number));
     }
 }
 
@@ -763,5 +824,38 @@ if (!function_exists('bulan_indo')) {
 
         $bulan_int = date('m', time());
         return $bulan[(int) $bulan_int];
+    }
+}
+
+// Creeate short encrypt
+if (!function_exists('short_encrypt')) {
+    function short_encrypt($string)
+    {
+        $key = '@#$%^&*()_+';
+        $result = '';
+        for ($i = 0; $i < strlen($string); $i++) {
+            $char = substr($string, $i, 1);
+            $keychar = substr($key, ($i % strlen($key)) - 1, 1);
+            $char = chr(ord($char) + ord($keychar));
+            $result .= $char;
+        }
+        return base64_encode($result);
+    }
+}
+
+// Creeate short decrypt
+if (!function_exists('short_decrypt')) {
+    function short_decrypt($string)
+    {
+        $key = '@#$%^&*()_+';
+        $result = '';
+        $string = base64_decode($string);
+        for ($i = 0; $i < strlen($string); $i++) {
+            $char = substr($string, $i, 1);
+            $keychar = substr($key, ($i % strlen($key)) - 1, 1);
+            $char = chr(ord($char) - ord($keychar));
+            $result .= $char;
+        }
+        return $result;
     }
 }

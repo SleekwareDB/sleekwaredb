@@ -2,6 +2,10 @@
 	<img src="assets/img/logo-with-no-bg.png" width="245" height="60">
 </p>
 
+<p align="center">
+	<img src="http://img.shields.io/badge/help-wanted-lightgreen.svg"> <img src="http://img.shields.io/badge/LICENSE-MIT-green.svg">
+</p>
+
 # SleekWareDB
 NoSQL API with [SleekDB](https://sleekdb.github.io/). This project was created as an alternative to the existing NoSQL database services on the Internet. [SleekDB](https://sleekdb.github.io/) is an API for File-based NoSQL database management built on top of the [SleekDB](https://sleekdb.github.io/).
 
@@ -44,8 +48,10 @@ composer create-project sleekware/sleekware
 
 Please write details about your PR.
 
-## Built with
+## Contributors
 
-- [Codeigniter 3](https://github.com/bcit-ci/CodeIgniter) - Open Source PHP Framework (originally from EllisLab)
-- [SleekDB](https://sleekdb.github.io/) - A NoSQL Database made using PHP
-- [AdminLTE](https://adminlte.io/) Template
+<p align="center">
+	<a href = "https://github.com/SleekwareDB/sleekwaredb/graphs/contributors">
+		<img src = "https://contrib.rocks/image?repo=SleekwareDB/sleekwaredb"/>
+	</a>
+</p>
