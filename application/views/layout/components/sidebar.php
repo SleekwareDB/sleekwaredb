@@ -17,25 +17,25 @@
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="<?= base_url('dashboard') ?>" class="nav-link">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
                     <p>Dashboard</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="../widgets.html" class="nav-link">
+                <a href="<?= base_url('team_members') ?>" class="nav-link">
                     <i class="nav-icon fas fa-users"></i>
                     <p>Team Members</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="../widgets.html" class="nav-link">
+                <a href="<?= base_url('projects') ?>" class="nav-link">
                     <i class="nav-icon fas fa-fire"></i>
                     <p>Projects</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="../widgets.html" class="nav-link">
+                <a href="<?= base_url('applications') ?>" class="nav-link">
                     <i class="nav-icon fas fa-dice-d6"></i>
                     <p>Applications</p>
                 </a>
