@@ -8,9 +8,12 @@ class Sleekwaredb_Model extends CI_Model
     protected $models;
     protected $store;
     protected $sleekDBConfig;
-    protected $_coreUserTable = 'users';
-    protected $_coreLoggerTable = 'loggers';
+
     protected $_coreAppDatabase = 'SleekwareDB';
+
+    protected $_coreUserTable   = 'users';
+    protected $_coreLoggerTable = 'loggers';
+    protected $_coreAppTable    = 'apps';
 
     public function __construct()
     {
@@ -58,6 +61,18 @@ class Sleekwaredb_Model extends CI_Model
         return $this->store;
     }
 
+    public function store($storeName)
+    {
+        $databaseName = md5($this->session->userdata('email'));
+        $this->store = new Store( $storeName, STORAGE . $databaseName, $this->sleekDBConfig );
+        return $this->store;
+    }
+
+    /**
+     * It creates a new instance of the Store class and returns it.
+     *
+     * @return The coreUserCollection() method returns the store object.
+     */
     public function coreUserCollection()
     {
         $databaseName = md5($this->_coreAppDatabase);
@@ -65,10 +80,22 @@ class Sleekwaredb_Model extends CI_Model
         return $this->store;
     }
 
+    /**
+     * It creates a new instance of the Store class and returns it.
+     *
+     * @return The store object.
+     */
     public function coreLoggerCollection()
     {
         $databaseName = md5($this->_coreAppDatabase);
         $this->store = new Store($this->_coreLoggerTable, APP_DATABASE . $databaseName, $this->sleekDBConfig);
+        return $this->store;
+    }
+
+    public function coreAppCollection()
+    {
+        $databaseName = md5($this->_coreAppDatabase);
+        $this->store = new Store($this->_coreAppTable, APP_DATABASE . $databaseName, $this->sleekDBConfig);
         return $this->store;
     }
 }

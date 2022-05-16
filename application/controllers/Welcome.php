@@ -6,12 +6,13 @@ class Welcome extends Sleekwaredb_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		isInstalled();
 	}
 
-	public function index()
+	public function install()
 	{
-		$data['title'] = 'SleekwareDB';
-		$data['content'] = 'welcome_message';
+		$data['title'] = 'SleekwareDB - Installation';
+		$data['content'] = 'install';
 		$this->load->view('layout/app', $data);
 	}
 

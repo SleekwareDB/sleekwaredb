@@ -283,7 +283,7 @@ $(document).ready(function() {
                         icon: response.type,
                         title: response.msg
                     }).then(function() {
-                        window.location.href = base_url('auth_signin')
+                        window.location.href = base_url()
                     })
                     console.log(response)
                 })
@@ -297,6 +297,38 @@ $(document).ready(function() {
                 })
             }
         })
+        return false
+    })
+
+    // Install form Process
+    $(document).on('submit', '#installForm', function (e) {
+        e.preventDefault();
+        var form = $(this)[0]
+        if (form.checkValidity() === false) {
+            e.preventDefault();
+            e.stopPropagation();
+        } else {
+            var formData = $(this).serializeArray()
+            $.post(base_url('ajax/auth/install'), formData)
+                .done(function (response) {
+                    Toast.fire({
+                        icon: response.type,
+                        title: response.msg
+                    }).then(function () {
+                        window.location.href = base_url('auth_signin')
+                    })
+                    console.log(response)
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    let response = jqXHR.responseJSON
+                    Toast.fire({
+                        icon: response.type,
+                        title: response.msg
+                    })
+                    console.log(jqXHR.responseJSON)
+                })
+        }
+        form.classList.add('was-validated');
         return false
     })
 });
