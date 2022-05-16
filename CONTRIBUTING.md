@@ -34,7 +34,7 @@ The process described here has several goals:
 
 Please follow all instructions in [the template](https://github.com/SleekwareDB/sleekwaredb/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
 
-##  Commit Message Guidelines sunglasses 😎
+## Commit Message Guidelines 😎
 
 In order to make git commit messages easier to read and faster to reason about, we follow some guidelines on most commits to keep the format predictable. Check [Conventional Commits specification](https://conventionalcommits.org/) for more information about our guidelines.
 
