@@ -35,18 +35,25 @@ Integrate with any Platform
 composer create-project sleekware/sleekware
 ```
 
-## Usage
-...
-
 ## Contributing
+Please to read [Code of CONDUCT](CODE_OF_CONDUCT.md) before start to contribute.
+### ✍️ As a Technical Writter
+The project requires contributors who are able to create manual presentations for users or developers. Visit [Discussions](https://github.com/SleekwareDB/sleekwaredb/discussions/categories/documentation) Page
 
-- Fork SleekWare
-- Create your feature branch git checkout -b feature/my-new-feature
-- Commit your changes git commit -am 'Added some feature'
-- Push to the branch git push origin feature/my-new-feature
-- Create new Pull Request targeting dev branch
+### 👨‍💻 As a Developer
+This project requires contributions from many developers to be of good use in the future.
 
-Please write details about your PR.
+As a developer, to be able to unite the vision and mission of the community, it's worth reading how SleekwareDB was developed and built using several technologies:
+
+- [SleekDB](https://sleekdb.github.io) - A NoSQL Database made using PHP
+- [AdminLTE](https://adminlte.io) - AdminLTE Bootstrap Admin Dashboard Template
+- [RestServer](https://github.com/chriskacerguis/codeigniter-restserver) - CodeIgniter RestServer
+- [Codeigniter](https://github.com/bcit-ci/CodeIgniter) -  Open Source PHP Framework (originally from EllisLab)
+
+### 💡 As a Scientist
+As an active contributor by providing practical suggestions and ideas that can be useful for the community. Visit [Discussions](https://github.com/SleekwareDB/sleekwaredb/discussions/categories/ideas) Page
+
+Read more about [CONTRIBUTING](CONTRIBUTING.md)
 
 ## Contributors
 
