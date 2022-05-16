@@ -859,3 +859,24 @@ if (!function_exists('short_decrypt')) {
         return $result;
     }
 }
+
+if (!function_exists('isInstalled')) {
+    function isInstalled()
+    {
+        $CI = &get_instance();
+        $CI->load->model('App_model', 'app');
+        if ($CI->app->checkIfInstalled() < 1 && $CI->uri->segment(1) != 'install') {
+            redirect('install');
+        }
+    }
+}
+
+if (!function_exists('app_config')) {
+    function app_config($key)
+    {
+        $CI =& get_instance();
+        $CI->load->model('App_model', 'app');
+        $data = $CI->app->getAppValue($key);
+        return (empty($data)) ? [] : $data;
+    }
+}
