@@ -12,6 +12,39 @@ class Auth extends Sleekwaredb_Controller
         }
     }
 
+    public function install()
+    {
+        // Check if password is same
+        if ($this->form_data['password'] !== $this->form_data['rePassword']) {
+            $response = [
+                'status' => 'error',
+                'type' => 'error',
+                'code' => Sleekwaredb_Controller::HTTP_NOT_ACCEPTABLE,
+                'msg' => 'Password and re-password is not same',
+            ];
+        } else {
+            // Check if already installed
+            if ($this->core_app->checkIfInstalled()) {
+                $response = [
+                    'status' => 'error',
+                    'type' => 'error',
+                    'code' => Sleekwaredb_Controller::HTTP_NOT_ACCEPTABLE,
+                    'message' => 'Already installed',
+                ];
+            } else {
+                // Save data
+                $this->core_app->save($this->form_data);
+                $response = [
+                    'status' => 'success',
+                    'type' => 'success',
+                    'code' => Sleekwaredb_Controller::HTTP_OK,
+                    'msg' => 'Successfully installed',
+                ];
+            }
+        }
+        $this->response($response, $response['code'], 'json');
+    }
+
     /**
      * It checks if the user is authorized to login.
      */
