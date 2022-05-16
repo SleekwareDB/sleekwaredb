@@ -15,7 +15,7 @@
 
 </head>
 
-<body class="d-flex align-items-center justify-content-center" style="height: 100vh;">
+<body class="d-flex align-items-center justify-content-center bg-dark text-light" style="height: 100vh;">
 
     <?php $this->load->view($content); ?>
 

@@ -1,4 +1,4 @@
-<div class="card" style="width: 25rem;">
+<div class="card bg-dark border-0" style="width: 25rem;">
 	<div class="card-body">
 		<div class="text-center">
 			<a href="<?= base_url() ?>"><img src="<?= base_url('assets/img/logo-with-no-bg.png') ?>" alt="SleekwareDB" width="125" height="35"></a>
