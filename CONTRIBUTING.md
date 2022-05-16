@@ -6,6 +6,22 @@
 
 Please to read [Code of CONDUCT](CODE_OF_CONDUCT.md) before start to contribute.
 
+### ✍️ As a Technical Writter
+The project requires contributors who are able to create manual presentations for users or developers.
+
+### 👨‍💻 As a Developer
+This project requires contributions from many developers to be of good use in the future.
+
+As a developer, to be able to unite the vision and mission of the community, it's worth reading how SleekwareDB was developed and built using several technologies:
+
+- [SleekDB](https://sleekdb.github.io) - A NoSQL Database made using PHP
+- [AdminLTE](https://adminlte.io) - AdminLTE Bootstrap Admin Dashboard Template
+- [RestServer](https://github.com/chriskacerguis/codeigniter-restserver) - CodeIgniter RestServer
+- [Codeigniter](https://github.com/bcit-ci/CodeIgniter) -  Open Source PHP Framework (originally from EllisLab)
+
+### 💡 As a Scientist
+As an active contributor by providing practical suggestions and ideas that can be useful for the community.
+
 ### 🛠 Suggesting Enhancements
 
 This section guides you through submitting an enhancement suggestion, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion 📝 and find related suggestions. 🔎
