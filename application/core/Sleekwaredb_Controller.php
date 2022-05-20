@@ -37,9 +37,10 @@ class Sleekwaredb_Controller extends CI_Controller
         // Define Model in Array Assoc
         $this->models = include APPPATH . '/loaders/models.php';
         $this->form_data = ($this->input->method() == 'post') ? $this->input->post(null, true) : $this->input->get(null,  true);
+        $this->form_json = json_decode(file_get_contents('php://input'), true);
 
         $this->load->library(['session', 'user_agent', 'encryption']);
-        $this->load->helper(['url', 'html', 'form', 'app']);
+        $this->load->helper(['url', 'html', 'form', 'app', 'cookie']);
 
         $this->encryption->initialize(array('driver' => 'openssl'));
 

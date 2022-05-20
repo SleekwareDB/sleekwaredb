@@ -1202,7 +1202,7 @@ class CI_Loader {
 		if ($config === NULL)
 		{
 			// Fetch the config paths containing any package paths
-			$config_component = $this->_ci_get_component('config');
+			$config_component = $this->_ci_get_component('config') ?? new stdClass();
 
 			if (is_array($config_component->_config_paths))
 			{

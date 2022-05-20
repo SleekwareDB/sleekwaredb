@@ -1,0 +1,29 @@
+{
+  "name": "sleekware",
+  "version": "1.0.0",
+  "description": "SleekwareDB",
+  "scripts": {
+    "build": "browserify assets/js/app.js -do | uglifyjs -cm > assets/js/bundle.min.js",
+    "watch": "watchify assets/js/app.js -o assets/js/bundle.min.js -d -v"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SleekwareDB/sleekwaredb.git"
+  },
+  "author": "Imam Ali Mustofa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SleekwareDB/sleekwaredb/issues"
+  },
+  "homepage": "https://github.com/SleekwareDB/sleekwaredb#readme",
+  "dependencies": {
+    "@popperjs/core": "^2.11.5",
+    "admin-lte": "^3.2.0",
+    "axios": "^0.27.2",
+    "bootstrap": "^4.6.1",
+    "jquery": "^3.6.0",
+    "jsoneditor": "^9.7.4",
+    "moment": "^2.29.3",
+    "sweetalert2": "^11.4.14"
+  }
+}

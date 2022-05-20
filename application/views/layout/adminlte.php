@@ -4,10 +4,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= $title ?></title>
+    <title><?= $title ?> - <?= app_config('applicationName') ?></title>
+    <link rel="shortcut icon" href="<?= base_url('assets/img/SWDB-PP.png') ?>" type="image/png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <?= adminlte('all.min.css') ?>
-    <?= adminlte('adminlte.min.css') ?>
+    <?= node_modules('all.min.css') ?>
+    <?= node_modules('dataTables.bootstrap4.min.css') ?>
+    <?= node_modules('responsive.bootstrap4.min.css') ?>
+    <?= node_modules('buttons.bootstrap4.min.css') ?>
+    <?= node_modules('toastr.min.css') ?>
+    <?= node_modules('adminlte.min.css') ?>
+    <?= link_tag('node_modules/jsoneditor/dist/jsoneditor.min.css') ?>
+    <link rel="stylesheet" href="" id="darkjsoneditor">
     <style>
         .sidebar-custom {
             position: absolute;
@@ -25,7 +32,11 @@
         <?php $this->load->view('layout/components/navbar') ?>
 
         <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4">
-            <?php $this->load->view('layout/components/sidebar') ?>
+            <?php if ($this->uri->segment(1) == 'settings') : ?>
+                <?php $this->load->view('layout/components/sidebar-config') ?>
+            <?php else : ?>
+                <?php $this->load->view('layout/components/sidebar') ?>
+            <?php endif; ?>
         </aside>
 
         <div class="content-wrapper">
@@ -58,30 +69,7 @@
 
     </div>
 
-
-    <script src="<?= adminlte('jquery.min.js', true) ?>"></script>
-    <script src="<?= adminlte('bootstrap.bundle.min.js', true) ?>"></script>
-    <script src="<?= adminlte('adminlte.min.js', true) ?>"></script>
-    <script src="<?= adminlte('demo.js', true) ?>"></script>
-    <script src="<?= adminlte('sweetalert2.all.min.js', true) ?>"></script>
-    <script>
-        let base_url = function(pathUri) {
-            return window.location.protocol + '//' + window.location.hostname + '/' + ((pathUri) ? pathUri.replace(/^\/|\/$/g, '') : '');
-        }
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        })
-    </script>
-    <script src="<?= base_url('assets/js/app.js') ?>"></script>
+    <script src="<?= base_url('assets/js/bundle.min.js') ?>"></script>
 </body>
 
 </html>

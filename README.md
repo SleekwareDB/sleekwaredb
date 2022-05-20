@@ -17,12 +17,18 @@ SleekwareDB is an Open Source project, anyone can contribute to build a better S
 
 ## Features
 
-### 📂 Flat File Database
-Easy to manage flat file as database
-### 🖐️ REST API Operation
-CRUD data with Easy REST API
-### 😎 Cross Platform
+### 🗃️ Flat File Database
+Easy to manage flat file JSON as database
+### 🌐 **REST API Operation**
+CRUD Stores and Collections with Easy REST API
+### ✨ **Cross Platform**
 Integrate with any Platform
+### 🖥️ Self-Hosted
+Install on your server with easy installation process
+### ☁️ Web UI Dashboard
+Manage Teams, Projects, Apps, Stores, Collection, etc with easy UI
+### 🚀 Customized Your App
+Feel free to customize this app, deep dive in SleekwareDB Source Code
 
 ## Requirements
 

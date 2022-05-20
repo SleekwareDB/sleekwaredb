@@ -17,13 +17,13 @@
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item">
-                <a href="<?= base_url('dashboard') ?>" class="nav-link">
+                <a href="<?= base_url('dashboard') ?>" class="nav-link <?= sidebar_active('dashboard') ?>">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
                     <p>Dashboard</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="<?= base_url('team_members') ?>" class="nav-link">
+                <a href="<?= base_url('team-members') ?>" class="nav-link <?= sidebar_active('team-members') ?>">
                     <i class="nav-icon fas fa-users"></i>
                     <p>Team Members</p>
                 </a>
@@ -40,22 +40,9 @@
                     <p>Applications</p>
                 </a>
             </li>
-            <li class="nav-header">Data Store</li>
-            <li class="nav-item">
-                <a href="../widgets.html" class="nav-link">
-                    <i class="nav-icon fas fa-database"></i>
-                    <p>Stores</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="../widgets.html" class="nav-link">
-                    <i class="nav-icon fab fa-buffer"></i>
-                    <p>Collections</p>
-                </a>
-            </li>
             <li class="nav-header">Auth Providers</li>
             <li class="nav-item">
-                <a href="../widgets.html" class="nav-link">
+                <a href="javascript:;" class="nav-link">
                     <i class="nav-icon fab fa-github"></i>
                     <p>
                         Github
@@ -64,7 +51,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="../widgets.html" class="nav-link">
+                <a href="javascript:;" class="nav-link">
                     <i class="nav-icon fab fa-gitlab"></i>
                     <p>
                         Gitlab
@@ -73,7 +60,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="../widgets.html" class="nav-link">
+                <a href="javascript:;" class="nav-link">
                     <i class="nav-icon fab fa-dev"></i>
                     <p>
                         DEV.to
@@ -82,7 +69,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="../widgets.html" class="nav-link">
+                <a href="javascript:;" class="nav-link">
                     <i class="nav-icon fab fa-twitter"></i>
                     <p>
                         Twitter
@@ -92,7 +79,7 @@
             </li>
         </ul>
         <div class="sidebar-custom">
-            <a href="javascript:;" class="btn btn-link"><i class="fas fa-cogs"></i></a>
+            <a href="<?= base_url('settings') ?>" class="btn btn-link"><i class="fas fa-cogs"></i></a>
             <a href="javascript:;" id="logoutButton" class="btn btn-default hide-on-collapse pos-right"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </div>
     </nav>

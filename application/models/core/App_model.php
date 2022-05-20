@@ -10,7 +10,7 @@ class App_model extends Sleekwaredb_Model
 
     public function checkIfInstalled()
     {
-        return $this->coreAppCollection()->count() > 0;
+        return $this->coreAppCollection() > 0;
     }
 
     public function save( array $data )
@@ -19,22 +19,26 @@ class App_model extends Sleekwaredb_Model
             'applicationName' => $data['applicationName'],
             'applicationDescription' => $data['applicationDescription'],
             'appId' => $data['appId'],
-            'appSecret' => $data['appSecret'],
-            'createdAt' => date('Y-m-d H:i:s'),
-            'updatedAt' => date('Y-m-d H:i:s'),
-            'deletedAt' => null
+            'appSecret' => $data['appSecret']
         ];
-        $this->coreAppCollection()->insert($appData);
+        $this->collection('apps')->insert(add_metadata($appData));
 
         $userData = [
             'fullname' => $data['fullname'],
             'email' => $data['email'],
             'password' => password_hash($data['password'], PASSWORD_DEFAULT),
             'role' => 'super',
-            'createdAt' => date('Y-m-d H:i:s'),
-            'updatedAt' => date('Y-m-d H:i:s'),
-            'deletedAt' => null
         ];
-        $this->coreUserCollection()->insert($userData);
+        $this->collection('users')->insert(add_metadata($userData));
+
+        if (checkIsAlreadyBoot($data['email']) === false) {
+            $this->bootingUserApp($data['email']);
+        }
+    }
+
+    public function getAppValue($key)
+    {
+        $app = $this->collection('apps')->createQueryBuilder();
+        return $app->select(["{$key}"])->getQuery()->first();
     }
 }

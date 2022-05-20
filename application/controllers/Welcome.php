@@ -18,6 +18,7 @@ class Welcome extends Sleekwaredb_Controller {
 
 	public function auth_signin()
 	{
+		is_logged_in();
 		$data['title'] = 'SleekwareDB - Signin';
 		$data['content'] = 'auth_signin';
 		$this->load->view('layout/auth', $data);

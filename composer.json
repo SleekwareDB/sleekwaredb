@@ -12,7 +12,8 @@
     "require": {
         "php": "^7.4|^8.0",
         "rakibtg/sleekdb": "^2.13",
-        "guzzlehttp/guzzle": "^7.4"
+        "guzzlehttp/guzzle": "^7.4",
+        "firebase/php-jwt": "^6.2"
     },
     "suggest": {
         "paragonie/random_compat": "Provides better randomness in PHP 5.x"

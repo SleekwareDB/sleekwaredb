@@ -9,12 +9,6 @@ class Sleekwaredb_Model extends CI_Model
     protected $store;
     protected $sleekDBConfig;
 
-    protected $_coreAppDatabase = 'SleekwareDB';
-
-    protected $_coreUserTable   = 'users';
-    protected $_coreLoggerTable = 'loggers';
-    protected $_coreAppTable    = 'apps';
-
     public function __construct()
     {
         parent::__construct();
@@ -22,7 +16,7 @@ class Sleekwaredb_Model extends CI_Model
         $this->models = include APPPATH . '/loaders/models.php';
 
         $this->load->library(['session', 'user_agent']);
-        $this->load->helper(['url', 'html', 'form', 'app']);
+        $this->load->helper(['url', 'html', 'form', 'app', 'cookie', 'string']);
 
         // default sleekDB configurations
         $this->sleekDBConfig = [
@@ -54,48 +48,106 @@ class Sleekwaredb_Model extends CI_Model
      *
      * @return The store collection object.
      */
-    public function collection($database, $name)
+    public function collection($name)
     {
-        $databaseName = md5($database);
-        $this->store = new Store( $name, STORAGE . $databaseName, $this->sleekDBConfig );
-        return $this->store;
-    }
-
-    public function store($storeName)
-    {
-        $databaseName = md5($this->session->userdata('email'));
-        $this->store = new Store( $storeName, STORAGE . $databaseName, $this->sleekDBConfig );
-        return $this->store;
-    }
-
-    /**
-     * It creates a new instance of the Store class and returns it.
-     *
-     * @return The coreUserCollection() method returns the store object.
-     */
-    public function coreUserCollection()
-    {
-        $databaseName = md5($this->_coreAppDatabase);
-        $this->store = new Store($this->_coreUserTable, APP_DATABASE . $databaseName, $this->sleekDBConfig);
-        return $this->store;
-    }
-
-    /**
-     * It creates a new instance of the Store class and returns it.
-     *
-     * @return The store object.
-     */
-    public function coreLoggerCollection()
-    {
-        $databaseName = md5($this->_coreAppDatabase);
-        $this->store = new Store($this->_coreLoggerTable, APP_DATABASE . $databaseName, $this->sleekDBConfig);
+        $this->store = new Store( $name, APP_DATABASE, $this->sleekDBConfig );
         return $this->store;
     }
 
     public function coreAppCollection()
     {
-        $databaseName = md5($this->_coreAppDatabase);
-        $this->store = new Store($this->_coreAppTable, APP_DATABASE . $databaseName, $this->sleekDBConfig);
+        $files = array();
+        $dir = opendir(APP_DATABASE);
+        while (($currentFile = readdir($dir)) !== false) {
+            $skips = ['.','..','.gitignore','index.html'];
+            if (in_array($currentFile, $skips)) {
+                continue;
+            }
+            $files[] = $currentFile;
+        }
+        closedir($dir);
+        return count($files);
+    }
+
+    /**
+     * > It creates a new store object and returns it
+     *
+     * @param storeName The name of the store you want to create.
+     *
+     * @return The store object.
+     */
+    public function store($storeName)
+    {
+        $this->store = new Store( $storeName, APP_DATABASE, $this->sleekDBConfig );
         return $this->store;
+    }
+
+    /**
+     * It creates a new database for the user, and creates a new API key for the user
+     *
+     * @param email The email of the user
+     */
+    public function bootingUserApp($email)
+    {
+        $storeCollections = ['apps','users','teams','projects','applications','rest_keys','rest_logs','rest_access','rest_limits'];
+        for ($i=0; $i < count($storeCollections); $i++) {
+            $this->store = new Store($storeCollections[$i], APP_DATABASE, $this->sleekDBConfig);
+        }
+        // Create API Key for Super Account
+        $this->collection('rest_keys')->insert([
+            'email' => $email,
+            'key' => random_string('encrypt'),
+            'level' => 1,
+            'ignore_limits' => false,
+            'is_private_key' => false,
+            'ip_addresses' => null,
+            'date_created' => sleektime()
+        ]);
+    }
+
+    public function allStores()
+    {
+        $stores = APP_DATABASE;
+        $files = array();
+        $dir = opendir($stores);
+        while (($currentFile = readdir($dir)) !== false) {
+            if ($currentFile == '.' or $currentFile == '..') {
+                continue;
+            }
+            $files[] = $currentFile;
+        }
+        closedir($dir);
+        usort($files, function ($a, $b) {
+            return strnatcmp($a, $b);
+        });
+        return $this->_storeTotalCollections($files);
+    }
+
+    private function _storeTotalCollections($storeNames)
+    {
+        $storeCollections = [];
+        foreach ($storeNames as $name) {
+            $this->store = new Store($name, APP_DATABASE, $this->sleekDBConfig);
+            array_push($storeCollections, [
+                'uuid' => guidv4(),
+                'name' => $name,
+                'totalCollections' => $this->store->count()
+            ]);
+        }
+        return $storeCollections;
+    }
+
+    protected function collection_rows($name)
+    {
+        $this->store = new Store($name, APP_DATABASE, $this->sleekDBConfig);
+        return $this->store->count();
+    }
+
+    public function collection_filterd($name)
+    {
+        $this->store = new Store($name, APP_DATABASE, $this->sleekDBConfig);
+        $query = $this->store->createQueryBuilder();
+        $data = $query->where(['deleted', '=', null])->getQuery()->fetch();
+        return count($data);
     }
 }

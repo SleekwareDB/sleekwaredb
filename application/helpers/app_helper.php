@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use GuzzleHttp\Client;
 
 if (!function_exists('scanAdminLteAssetFiles')) {
@@ -12,7 +14,7 @@ if (!function_exists('scanAdminLteAssetFiles')) {
             $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
             if (!is_dir($path)) {
                 $results[] = $path;
-            } else if ($value != "." && $value != ".." && $value != "index.html") {
+            } else if (!in_array($value, array('.', '..','index.html', '.bin', '.package-lock.json'))) {
                 scanAdminLteAssetFiles($path, $results);
                 $results[] = $path;
             }
@@ -66,6 +68,43 @@ if (!function_exists('adminlte')) {
     function adminlte(string $filename, $asset = false)
     {
         $filepath = adminlte_loader()[$filename];
+        if ($asset == false) {
+            return link_tag($filepath);
+        } else {
+            return base_url($filepath);
+        }
+    }
+}
+
+if (!function_exists('node_modules_loader')) {
+    function node_modules_loader()
+    {
+        $CI = get_instance();
+        $CI->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
+
+        $modelDir = FCPATH . 'node_modules' . DIRECTORY_SEPARATOR;
+
+        $cacheResults = $CI->cache->get('node_modules_loader');
+        if (!$cacheResults) {
+            $listOfFiles = scanAdminLteAssetFiles($modelDir);
+            $CI->cache->save('node_modules_loader', $listOfFiles, 86400);
+        } else {
+            $listOfFiles = $cacheResults;
+        }
+        return $listOfFiles;
+    }
+}
+
+if (!function_exists('node_modules')) {
+
+    /**
+     * Admin LTE Helper Asset
+     * @param string $uri  memuat posisi file yang disimpan dalam folder asset Admin LTE
+     * @param $asset
+     */
+    function node_modules(string $filename, $asset = false)
+    {
+        $filepath = node_modules_loader()[$filename];
         if ($asset == false) {
             return link_tag($filepath);
         } else {
@@ -206,16 +245,28 @@ if (!function_exists('breadcrumb')) {
     }
 }
 
+if (!function_exists('is_logged_in')) {
+
+    function is_logged_in()
+    {
+        $CI = &get_instance();
+        if (get_session('databaseName')) {
+            redirect(base_url('dashboard'));
+        }
+    }
+}
+
 if (!function_exists('need_login')) {
 
     function need_login()
     {
         $CI = &get_instance();
-        if (!$CI->session->userdata('databaseName')) {
-            redirect(base_url('/auth_signin'));
+        if (!get_session('databaseName')) {
+            redirect(base_url());
         }
     }
 }
+
 if (!function_exists('get_client_ip')) {
 
     /**
@@ -283,36 +334,6 @@ if (!function_exists('encrypt_decrypt')) {
     }
 }
 
-if (!function_exists('get_app_config')) {
-
-    /**
-     * @param string $config_name
-     * @param $optional
-     * @return mixed
-     */
-    function get_app_config(string $config_name, $optional = null)
-    {
-        $CI = &get_instance();
-        $CI->load->model('appconfig_model');
-        $config_value = $CI->appconfig_model->get_config_by_name($config_name);
-        if (!empty($config_value)) {
-            if ($config_name == 'app-icon' && $config_value != default_config('app-icon')) {
-                $config = default_config('app-icon');
-            } else {
-                $config = $config_value;
-            }
-        } else {
-            if ($optional == null) {
-                $config = 'AdminLTE Codeigniter Bolierplate';
-            } else {
-                $config = $optional;
-            }
-        }
-
-        return $config;
-    }
-}
-
 if (!function_exists('get_role')) {
 
     /**
@@ -358,9 +379,8 @@ if (!function_exists('get_session')) {
      */
     function get_session($sess_key)
     {
-        $CI = &get_instance();
-        $session = ($CI->session->userdata($sess_key) == '') ? 'unknown' : $CI->session->userdata($sess_key);
-        return $session;
+        $session = get_auth();
+        return $session[$sess_key] ?? null;
     }
 }
 
@@ -865,8 +885,11 @@ if (!function_exists('isInstalled')) {
     {
         $CI = &get_instance();
         $CI->load->model('App_model', 'app');
-        if ($CI->app->checkIfInstalled() < 1 && $CI->uri->segment(1) != 'install') {
+        if ($CI->app->checkIfInstalled() == false && $CI->uri->segment(1) != 'install') {
             redirect('install');
+        }
+        if ($CI->app->checkIfInstalled() == true && $CI->uri->segment(1) == 'install') {
+            redirect(base_url());
         }
     }
 }
@@ -875,8 +898,136 @@ if (!function_exists('app_config')) {
     function app_config($key)
     {
         $CI =& get_instance();
-        $CI->load->model('App_model', 'app');
+        $CI->load->model('app_model', 'app');
         $data = $CI->app->getAppValue($key);
-        return (empty($data)) ? [] : $data;
+        return (empty($data)) ? [] : $data[$key];
+    }
+}
+
+if (!function_exists('checkIsAlreadyBoot')) {
+    function checkIsAlreadyBoot($email)
+    {
+        return file_exists(APPPATH . 'database' . DIRECTORY_SEPARATOR . 'sleekstores' . DIRECTORY_SEPARATOR . md5($email));
+    }
+}
+
+if (!function_exists('sleektime')) {
+    function sleektime($format = null)
+    {
+        $epoch = round(microtime(true) * 1000);
+        if ($format == null) {
+            return $epoch;
+        } else {
+            return date($format, $epoch / 1000);
+        }
+    }
+}
+
+if (!function_exists('encode_auth_token')) {
+    function encode_auth_token(array $payload)
+    {
+        $data = array_merge($payload, [
+            'iat' => microtime(true),
+            'sub' => encrypt_decrypt('encrypt', $payload['uuid'])
+        ]);
+        $jwt = JWT::encode($data, $payload['uuid'], 'HS256');
+        return $jwt;
+    }
+}
+
+if (!function_exists('decode_auth_token')) {
+    function decode_auth_token($jwt, $key)
+    {
+        JWT::$leeway = 2628000;
+        $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
+        return (array) $decoded;
+    }
+}
+
+if (!function_exists('set_auth')) {
+    function set_auth($key, $data)
+    {
+        $CI =& get_instance();
+        $CI->input->set_cookie([
+            'name' => $key,
+            'value' => base64_encode(json_encode($data)),
+            'expire' => '2628000',
+            'path' => '/',
+            'prefix' => '',
+            'secure' => true,
+            'httponly' => true
+        ]);
+
+        $CI->input->set_cookie([
+            'name' => 'SLEEKDB_AUTH',
+            'value' => $key,
+            'expire' => '2628000',
+            'path' => '/',
+            'prefix' => '',
+            'secure' => true,
+            'httponly' => true
+        ]);
+    }
+}
+
+if (!function_exists('get_auth')) {
+    function get_auth($key = 'SLEEKDB_AUTH')
+    {
+        $CI =& get_instance();
+        $cookie = $CI->input->cookie($key);
+        $token_key = (empty($cookie)) ? [] : $cookie;
+        $jwt = $CI->input->cookie($token_key);
+        $encoded = (empty($jwt)) ? null : json_decode(base64_decode($jwt), true);
+        return (empty($encoded)) ? null : decode_auth_token($encoded, $token_key);
+    }
+}
+
+if (!function_exists('add_metadata')) {
+    function add_metadata(array $store)
+    {
+        $data = array_merge($store, [
+            'uuid' => guidv4(),
+            'createdAt' => sleektime(),
+            'updatedAt' => sleektime(),
+            'deletedAt' => null
+        ]);
+        return $data;
+    }
+}
+
+if (!function_exists('update_metadata')) {
+    function update_metadata(array $store)
+    {
+        $data = array_merge($store, [
+            'updatedAt' => sleektime()
+        ]);
+        return $data;
+    }
+}
+
+if (!function_exists('create_modal')) {
+    function create_modal($modalId, $modalFormName)
+    {
+        $modal = '
+        <div class="modal fade" id="'. $modalId .'" tabindex="-1" backdrop="static">
+            <form method="post" autocomplete="off" id="'. $modalFormName .'" class="needs-validation" novalidate>
+                <div class="modal-dialog modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Modal body text goes here.</p>
+                        </div>
+                        <div class="modal-footer"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        ';
+        return $modal;
     }
 }

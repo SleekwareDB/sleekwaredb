@@ -11,7 +11,7 @@ class Dashboard extends Sleekwaredb_Controller {
 
 	public function index()
 	{
-		$data['title'] 		= "Dashboard - SleekwareDB";
+		$data['title'] 		= "Dashboard";
 		$data['content'] 	= "dashboard";
 		$data['breadcrumb'] = [
 			['title' => 'Home', 'href' => base_url('dashboard')],

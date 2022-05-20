@@ -88,3 +88,4 @@ defined('APP_DATABASE') OR define('APP_DATABASE', APPPATH . 'database/');
 defined('STORAGE') OR define('STORAGE', APP_DATABASE . 'sleekstores/');
 defined('PASSCODE') OR define('PASSCODE', 'pronounce7-derived-stony-vitality-magnesium-babbling-bridged-fondness');
 defined('APP_NAME') OR define('APP_NAME', 'SleekwareDB');
+defined('KEY_TOKEN') OR define('KEY_TOKEN', '%eK^@PBNLd98XC%@BxSwM9AgkGNU$X');

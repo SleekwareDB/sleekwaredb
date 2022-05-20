@@ -357,6 +357,10 @@ if ( ! is_php('5.4'))
  */
 	// Load the base controller class
 	require_once BASEPATH.'core/Controller.php';
+	require_once APPPATH.'core/Sleekwaredb_Controller.php';
+	// Load the rest controller class
+	require_once BASEPATH . 'core/restserver/src/Format.php';
+	require_once BASEPATH . 'core/restserver/src/Rest_Controller.php';
 
 	/**
 	 * Reference to the CI_Controller method.

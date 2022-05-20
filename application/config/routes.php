@@ -53,4 +53,4 @@ $route['default_controller'] = 'welcome/auth_signin';
 $route['auth_signup'] = 'welcome/auth_signup';
 $route['install'] = 'welcome/install';
 $route['404_override'] = '';
-$route['translate_uri_dashes'] = FALSE;
+$route['translate_uri_dashes'] = TRUE;

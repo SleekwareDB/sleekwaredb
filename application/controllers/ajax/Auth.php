@@ -80,7 +80,11 @@ class Auth extends Sleekwaredb_Controller
         $data = [
             'fullname' => $this->form_data['fullname'],
             'email' => $this->form_data['email'],
-            'password' => password_hash($this->form_data['password'], PASSWORD_DEFAULT)
+            'password' => password_hash($this->form_data['password'], PASSWORD_DEFAULT),
+            'uuid' => guidv4(),
+            'createdAt' => sleektime(),
+            'updatedAt' => sleektime(),
+            'deletedAt' => null
         ];
 
         if ($this->core_user->save($data)) {
@@ -103,7 +107,9 @@ class Auth extends Sleekwaredb_Controller
 
     public function logout()
     {
-        $this->session->sess_destroy();
+        $session = get_session('uuid');
+        delete_cookie('SLEEKDB_AUTH');
+        delete_cookie($session);
         $response = [
             'status' => true,
             'type' => 'success',
