@@ -129,7 +129,7 @@ switch (ENVIRONMENT)
  *
  * NO TRAILING SLASH!
  */
-	$view_folder = 'backend/application/views';
+	$view_folder = 'frontend';
 
 
 /*
