@@ -64,10 +64,14 @@ This project requires contributions from many developers to be of good use in th
 
 As a developer, to be able to unite the vision and mission of the community, it's worth reading how SleekwareDB was developed and built using several technologies:
 
+#### Backend
 - [SleekDB](https://sleekdb.github.io) - A NoSQL Database made using PHP
-- [AdminLTE](https://adminlte.io) - AdminLTE Bootstrap Admin Dashboard Template
 - [RestServer](https://github.com/chriskacerguis/codeigniter-restserver) - CodeIgniter RestServer
 - [Codeigniter](https://github.com/bcit-ci/CodeIgniter) -  Open Source PHP Framework (originally from EllisLab)
+
+#### Frontend
+- [AdminLTE](https://adminlte.io) - AdminLTE Bootstrap Admin Dashboard Template
+- Or give your idea!
 
 ### 💡 As a Scientist
 As an active contributor by providing practical suggestions and ideas that can be useful for the community. Visit [Discussions](https://github.com/SleekwareDB/sleekwaredb/discussions/categories/ideas) Page
