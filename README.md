@@ -8,24 +8,40 @@
 	<strong><small>SleekwareDB is a NoSQL database storage service. A database storage service that can be used for various platforms and is easy to integrate.</small></strong>
 </div>
 <hr>
-
-NoSQL API with [SleekDB](https://sleekdb.github.io/). This project was created as an alternative to the existing NoSQL database services on the Internet. [SleekDB](https://sleekdb.github.io/) is an API for File-based NoSQL database management built on top of the [SleekDB](https://sleekdb.github.io/).
-
-## About
-
-What is SleekwareDB? SleekwareDB is a NoSQL database storage service. A database storage service that can be used for various platforms and is easy to integrate.
-
-SleekwareDB is an Open Source project, anyone can contribute to build a better SleekwareDB for the future.
-
-## Features
-| What | Whooooot! |
-| :------------------------------------------------: | :----------------------------------------------------------: |
-| 🗃️ Flat File Database | Easy to manage flat file JSON as database |
-| 🌐 REST API Operation | CRUD Stores and Collections with Easy REST API |
-| ✨ Cross Platform | Integrate with any Platform |
-| 🖥️ Self-Hosted | Install on your server with easy installation process |
-| ☁️ Web UI Dashboard | Manage Teams, Projects, Apps, Stores, Collection, etc with easy UI |
-| 🚀 Customized Your App | Feel free to customize this app, deep dive in SleekwareDB Source Code |
+<div align="center">
+	<em>NoSQL API with <a href="https://sleekdb.github.io/" target="_blank">SleekDB</a>. This project was created as an alternative to the existing NoSQL database services on the Internet. <a href="https://sleekdb.github.io/" target="_blank">SleekDB</a> is an API for File-based NoSQL database management built on top of the <a href="https://sleekdb.github.io/" target="_blank">SleekDB</a>.</em>
+	<br><br>
+	<h2>About</h2>
+	<p><strong>What is SleekwareDB?</strong> SleekwareDB is a NoSQL database storage service. A database storage service that can be used for various platforms and is easy to integrate.</p>
+	<p><strong>SleekwareDB</strong> is an <strong>Open Source</strong> project, anyone can contribute to build a better SleekwareDB for the future.</p>
+	<br><br>
+	<h2>Features</h2>
+	<p>
+		<strong>🗃️ Flat File Database</strong> <br>
+		<em>Easy to manage flat file JSON as database</em>
+	</p>
+	<p>
+		<strong>🌐 REST API Operation</strong> <br>
+		<em>CRUD Stores and Collections with Easy REST API</em>
+	</p>
+	<p>
+		<strong>✨ Cross Platform</strong> <br>
+		<em>Integrate with any Platform</em>
+	</p>
+	<p>
+		<strong>🖥️ Self-Hosted</strong> <br>
+		<em>Install on your server with easy installation process</em>
+	</p>
+	<p>
+		<strong>☁️ Web UI Dashboard</strong> <br>
+		<em>Manage Teams, Projects, Apps, Stores, Collection, etc with easy UI</em>
+	</p>
+	<p>
+		<strong>🚀 Customized Your App</strong> <br>
+		<em>Feel free to customize this app, deep dive in SleekwareDB Source Code</em>
+	</p>
+	<br><br><br>
+</div>
 
 ## Requirements
 
