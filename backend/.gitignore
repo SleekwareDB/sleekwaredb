@@ -1,0 +1,7 @@
+# Ignore everything in this directory
+*
+!application/
+!system/
+# Except this file
+!composer.json
+!.gitignore
