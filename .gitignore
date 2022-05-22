@@ -1,21 +1,5 @@
 .DS_Store
 .vscode/
-backend/application/cache/*
-!backend/application/cache/index.html
-
-backend/application/logs/*
-!backend/application/logs/index.html
-
-!backend/application/*/.htaccess
-
-backend/composer.lock
-tests/mocks/database/ci_test.sqlite
-
-user_guide_src/build/*
-user_guide_src/cilexer/build/*
-user_guide_src/cilexer/dist/*
-user_guide_src/cilexer/pycilexer.egg-info/*
-/vendor/
 
 # IDE Files
 #-------------------------
