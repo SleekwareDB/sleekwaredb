@@ -1,6 +1,6 @@
 <div align="center">
 	<p align="center">
-		<img src="http://img.shields.io/badge/help-wanted-lightgreen.svg"> <img src="http://img.shields.io/badge/LICENSE-MIT-green.svg">
+		<img src="http://img.shields.io/badge/help-wanted-lightgreen.svg"> <img src="http://img.shields.io/badge/LICENSE-MIT-green.svg"> <img src="https://wakatime.com/badge/user/9feb5ddb-b966-4fa4-97f0-bcb7cd6f2473/project/69e71487-ea50-4bc8-b3fb-9eb84f5982aa.svg" alt="wakatime"> <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/sleekwaredb/sleekwaredb?style=flat">
 	</p>
 	<p align="center">
 		<img src="https://i.ibb.co/dmKd2Yr/logo-with-no-bg.png" width="365" height="80">
