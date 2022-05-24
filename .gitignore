@@ -12,6 +12,3 @@
 *.stTheme.cache
 *.sublime-workspace
 *.sublime-project
-/tests/tests/
-/tests/results/
-node_modules/
