@@ -238,12 +238,6 @@ class Rest_Controller extends \Sleekwaredb_Controller
     protected $auth_override;
 
     /**
-     *
-     * @var object
-     */
-    protected $jwt;
-
-    /**
      * Extend this function to apply additional checking early on in the process.
      *
      * @return void
@@ -388,11 +382,7 @@ class Rest_Controller extends \Sleekwaredb_Controller
         $this->early_checks();
 
         // Load DB if its enabled
-        $auth = $this->getAuth();
-        $key = encrypt_decrypt('decrypt', $auth['pharse']);
-        $this->jwt = decode_auth_token($auth['token'], $key);
-        $database_exists = file_exists(APP_DATABASE . $this->jwt['email']);
-        if ($database_exists && ($this->config->item('rest_enable_keys') || $this->config->item('rest_enable_logging'))) {
+        if ($this->config->item('rest_enable_keys') || $this->config->item('rest_enable_logging')) {
             $this->rest->db = $this->storedb->collection($this->config->item('rest_keys_table'));
         }
 

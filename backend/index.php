@@ -55,7 +55,7 @@
  */
 $domain = !empty($_SERVER['HTTP_HOST']) ? strtolower($_SERVER['HTTP_HOST']) : 'cli';
 
-if ($domain === 'sleekware.test/backend' || $domain == 'cli') {
+if ($domain === 'sleekware.test/backend' || $domain == 'localhost' || $domain == 'cli') {
 	define('ENVIRONMENT', 'development');
 } else if ($domain === 'dev.sleekware.com') {
 	define('ENVIRONMENT', 'testing');
@@ -63,7 +63,7 @@ if ($domain === 'sleekware.test/backend' || $domain == 'cli') {
 	define('ENVIRONMENT', 'production');
 }
 
-if ($domain !== 'cli') {
+if ($domain !== 'cli' || $domain !== 'localhost') {
 	/**
 	 * Define APP_URL Dynamically
 	 * Write this at the bottom of index.php
@@ -71,6 +71,10 @@ if ($domain !== 'cli') {
 	 * Automatic base url
 	 */
 	define('APP_URL', ($_SERVER['SERVER_PORT'] == 443 ? 'https' : 'http') . "://{$_SERVER['SERVER_NAME']}" . str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']));
+} else if ($domain !== 'cli' || $domain === 'localhost') {
+	// Get server port
+	$port = $_SERVER['SERVER_PORT'];
+	define('APP_URL', 'http://localhost:' . $port);
 } else {
 	define('APP_URL', 'sleekware.test');
 }

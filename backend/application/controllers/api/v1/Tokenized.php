@@ -26,7 +26,7 @@ class Tokenized extends Sleekwaredb_Controller
                             'code' => Sleekwaredb_Controller::HTTP_OK,
                             'msg' => 'Successfully generete token and get apikey',
                             'result' => [
-                                'token' => $verify['token'] . '.' . $verify['pharse'],
+                                'token' => $verify['token'],
                                 'apikey' => $verify['apikey']
                             ]
                         ];

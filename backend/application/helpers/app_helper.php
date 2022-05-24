@@ -927,8 +927,7 @@ if (!function_exists('encode_auth_token')) {
     function encode_auth_token(array $payload)
     {
         $data = array_merge($payload, [
-            'iat' => microtime(true),
-            'sub' => encrypt_decrypt('encrypt', $payload['uuid'])
+            'iat' => microtime(true)
         ]);
         $jwt = JWT::encode($data, $payload['uuid'], 'HS256');
         return $jwt;

@@ -113,10 +113,8 @@ class User_model extends Sleekwaredb_model
                 $api = $this->collection('rest_keys')->findOneBy(['email','=', $email]);
                 return [
                     'code' => 200,
-                    'pharse' => encrypt_decrypt('encrypt', $data['uuid']),
                     'token' => encode_auth_token([
                         'uuid' => $data['uuid'],
-                        'databaseName' => md5($email),
                         'fullname' => $data['fullname'],
                         'email' => $data['email']
                     ]),
