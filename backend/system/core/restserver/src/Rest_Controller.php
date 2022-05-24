@@ -393,7 +393,7 @@ class Rest_Controller extends \Sleekwaredb_Controller
         $this->jwt = decode_auth_token($auth['token'], $key);
         $database_exists = file_exists(APP_DATABASE . $this->jwt['email']);
         if ($database_exists && ($this->config->item('rest_enable_keys') || $this->config->item('rest_enable_logging'))) {
-            $this->rest->db = $this->storedb->collection($this->jwt['email'], $this->config->item('rest_keys_table'));
+            $this->rest->db = $this->storedb->collection($this->config->item('rest_keys_table'));
         }
 
         // Use whatever database is in use (isset returns FALSE)
@@ -876,7 +876,7 @@ class Rest_Controller extends \Sleekwaredb_Controller
 
         // Find the key from server or arguments
         if (($key = isset($this->_args[$api_key_variable]) ? $this->_args[$api_key_variable] : $this->input->server($key_name))) {
-            $row = $this->storedb->collection($this->jwt['email'], $this->config->item('rest_keys_table'))->findOneBy([$this->config->item('rest_key_column'), '=', $key]);
+            $row = $this->storedb->collection($this->config->item('rest_keys_table'))->findOneBy([$this->config->item('rest_key_column'), '=', $key]);
             if (!$row) {
                 return false;
             }
@@ -963,7 +963,7 @@ class Rest_Controller extends \Sleekwaredb_Controller
     protected function _log_request($authorized = false)
     {
         // Insert the request into the log table
-        $is_inserted = $this->storedb->collection($this->jwt['email'], $this->config->item('rest_logs_table'))
+        $is_inserted = $this->storedb->collection($this->config->item('rest_logs_table'))
             ->insert(
                 [
                     'uri'        => $this->uri->uri_string(),
@@ -1036,7 +1036,7 @@ class Rest_Controller extends \Sleekwaredb_Controller
         $time_limit = (isset($this->methods[$controller_method]['time']) ? $this->methods[$controller_method]['time'] : 3600); // 3600 = 60 * 60
 
         // Get data about a keys' usage and limit to one row
-        $result = $this->storedb->collection($this->jwt['email'], $this->config->item('rest_limits_table'))
+        $result = $this->storedb->collection($this->config->item('rest_limits_table'))
             ->findOneBy([
                 ['uri' => $limited_uri], "AND", ['api_key' => $api_key]
             ]);
@@ -1044,7 +1044,7 @@ class Rest_Controller extends \Sleekwaredb_Controller
         // No calls have been made for this key
         if ($result === null) {
             // Create a new row for the following key
-            $this->storedb->collection($this->jwt['email'], $this->config->item('rest_limits_table'))
+            $this->storedb->collection($this->config->item('rest_limits_table'))
             ->insert([
                 'uri'          => $limited_uri,
                 'api_key'      => $api_key,
@@ -1056,7 +1056,7 @@ class Rest_Controller extends \Sleekwaredb_Controller
         // Been a time limit (or by default an hour) since they called
         elseif ($result['hour_started'] < (time() - $time_limit)) {
             // Reset the started period and count
-            $store_limits = $this->storedb->collection($this->jwt['email'], $this->config->item('rest_limits_table'));
+            $store_limits = $this->storedb->collection($this->config->item('rest_limits_table'));
 
             $limit_data = $store_limits
             ->findOneBy([
@@ -1077,7 +1077,7 @@ class Rest_Controller extends \Sleekwaredb_Controller
             }
 
             // Increase the count by one
-            $store_limits = $this->storedb->collection($this->jwt['email'], $this->config->item('rest_limits_table'));
+            $store_limits = $this->storedb->collection($this->config->item('rest_limits_table'));
 
             $limit_data = $store_limits
             ->findOneBy([
@@ -1936,7 +1936,7 @@ class Rest_Controller extends \Sleekwaredb_Controller
             return false;
         }
 
-        $store_logs = $this->storedb->collection($this->jwt['email'], $this->config->item('rest_logs_table'));
+        $store_logs = $this->storedb->collection($this->config->item('rest_logs_table'));
 
         $logs = $store_logs->findById($this->_insert_id);
         $logs['rtime'] = $this->_end_rtime - $this->_start_rtime;
@@ -1959,7 +1959,7 @@ class Rest_Controller extends \Sleekwaredb_Controller
             return false;
         }
 
-        $store_logs = $this->storedb->collection($this->jwt['email'], $this->config->item('rest_logs_table'));
+        $store_logs = $this->storedb->collection($this->config->item('rest_logs_table'));
 
         $logs = $store_logs->findById($this->_insert_id);
         $logs['response_code'] = $http_code;
@@ -1992,7 +1992,7 @@ class Rest_Controller extends \Sleekwaredb_Controller
         $controller = str_replace('//', '/', $controller);
 
         //check if the key has all_access
-        $accessRow = $this->storedb->collection($this->jwt['email'], $this->config->item('rest_access_table'))
+        $accessRow = $this->storedb->collection($this->config->item('rest_access_table'))
         ->findOneBy([
             ["key", "=", $this->rest->key], "AND", ["controller", "=", $controller]
         ]);
@@ -2047,7 +2047,7 @@ class Rest_Controller extends \Sleekwaredb_Controller
         if ($this->input->method() === 'options') {
             // Load DB if needed for logging
             if (!isset($this->rest->db) && $this->config->item('rest_enable_logging')) {
-                $this->rest->db = $this->storedb->collection($this->jwt['email'], $this->config->item('rest_logs_table'));
+                $this->rest->db = $this->storedb->collection($this->config->item('rest_logs_table'));
             }
             exit;
         }

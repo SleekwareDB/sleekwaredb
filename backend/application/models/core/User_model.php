@@ -110,7 +110,7 @@ class User_model extends Sleekwaredb_model
         $data = $user->findOneBy(['email', '=', $email]);
         if (!empty($data)) {
             if (password_verify($password, $data['password'])) {
-                $api = $this->collection($email, 'rest_keys')->findOneBy(['email','=', $email]);
+                $api = $this->collection('rest_keys')->findOneBy(['email','=', $email]);
                 return [
                     'code' => 200,
                     'pharse' => encrypt_decrypt('encrypt', $data['uuid']),
