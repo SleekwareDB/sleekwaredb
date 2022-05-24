@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  sleekwaredb-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: christexe/php:7.4-fpm-alpine
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www/html
+    volumes:
+      - ./backend/:/var/www/html
+      - ./backend/.docker/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    networks:
+      - sleewaredb-network
+
+  sleekwaredb-nginx:
+    image: nginx:alpine
+    volumes:
+      - ./backend/:/var/www/html
+      - ./backend/.docker/nginx/site.conf:/etc/nginx/conf.d/default.conf
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "${BACKEND_PORT}:80"
+    networks:
+      - sleewaredb-network
+
+  sleekwaredb-composer:
+      image: composer:latest
+      volumes:
+        - ./backend:/var/www/html
+      working_dir: /var/www/html
+      networks:
+        - sleewaredb-network
+
+networks:
+  sleewaredb-network:
+    external:
+      name: sleewaredb-network
