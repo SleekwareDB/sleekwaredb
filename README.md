@@ -43,15 +43,32 @@
 	<br><br><br>
 </div>
 
-## Requirements
-
-- PHP ^7.4|8.0
-- ext-json
-- ext-mbstring
-
 ## Installation
+Using Git SSH + docker-compose:
 ```bash
-composer create-project sleekware/sleekware
+git clone git@github.com:SleekwareDB/sleekwaredb.git
+cd sleekwaredb
+cp .env-example .env
+docker network create sleewaredb-network
+docker-compose up # docker-compose up -d
+```
+
+Using Git HTTP + docker-compose:
+```bash
+git clone https://github.com/SleekwareDB/sleekwaredb.git
+cd sleekwaredb
+cp .env-example .env
+docker network create sleewaredb-network
+docker-compose up # docker-compose up -d
+```
+
+Using gh cli + docker-compose:
+```bash
+gh repo clone SleekwareDB/sleekwaredb
+cd sleekwaredb
+cp .env-example .env
+docker network create sleewaredb-network
+docker-compose up # docker-compose up -d
 ```
 
 ## Contributing
@@ -70,8 +87,7 @@ As a developer, to be able to unite the vision and mission of the community, it'
 - [Codeigniter](https://github.com/bcit-ci/CodeIgniter) -  Open Source PHP Framework (originally from EllisLab)
 
 #### Frontend
-- [AdminLTE](https://adminlte.io) - AdminLTE Bootstrap Admin Dashboard Template
-- Or give your idea!
+- Or give your idea on [Discussions](https://github.com/SleekwareDB/sleekwaredb/discussions/categories/ideas)!
 
 ### 💡 As a Scientist
 As an active contributor by providing practical suggestions and ideas that can be useful for the community. Visit [Discussions](https://github.com/SleekwareDB/sleekwaredb/discussions/categories/ideas) Page
