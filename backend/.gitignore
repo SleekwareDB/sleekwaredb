@@ -1,7 +1,17 @@
-# Ignore everything in this directory
-*
-!application/
-!system/
-# Except this file
-!composer.json
-!.gitignore
+.DS_Store
+.vscode/
+
+# IDE Files
+#-------------------------
+/nbproject/
+.idea/*
+
+## Sublime Text cache files
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+/tests/tests/
+/tests/results/
+node_modules/

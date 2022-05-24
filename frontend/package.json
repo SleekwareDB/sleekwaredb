@@ -1,0 +1,25 @@
+{
+  "name": "sleekwaredb",
+  "version": "1.0.0",
+  "description": "SleekwareDB is a NoSQL database storage service. A database storage service that can be used for various platforms and is easy to integrate.",
+  "scripts": {
+    "build": "browserify assets/js/app.js -do | uglifyjs -cm > assets/js/bundle.min.js",
+    "watch": "watchify assets/js/app.js -o assets/js/bundle.min.js -d -v"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SleekwareDB/sleekwaredb.git"
+  },
+  "authors": [
+    {
+      "name": "Imam Ali Mustofa",
+      "email": "darkterminal@pm.me"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SleekwareDB/sleekwaredb/issues"
+  },
+  "homepage": "https://github.com/SleekwareDB/sleekwaredb#readme",
+  "dependencies": {}
+}
