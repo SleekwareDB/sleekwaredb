@@ -1,7 +1,15 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
+  "name": "sleekwaredb",
+  "version": "1.0.0",
   "private": true,
+  "description": "SleekwareDB is a NoSQL database storage service. A database storage service that can be used for various platforms and is easy to integrate.",
+  "authors": [{
+	"name": "Imam Ali Mustofa",
+	"email": "darkterminal@pm.me"
+  }],
+  "license": "MIT",			   
+  "url": "https://github.com/SleekwareDB/sleekwaredb/issues",
+  "homepage": "https://github.com/SleekwareDB/sleekwaredb#readme",      
   "scripts": {
     "dev": "next dev",
     "build": "next build",
