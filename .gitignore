@@ -13,3 +13,10 @@
 *.sublime-workspace
 *.sublime-project
 .env
+
+# Frontend
+/frontend/node_modules
+/frontend/.env.local
+/frontend/.env-local
+/frontend/out
+/frontend/dist
