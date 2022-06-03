@@ -1,4 +1,5 @@
 <?php
+defined('BASEPATH') or exit('No direct script access allowed');
 
 use SleekDB\Query;
 
@@ -23,6 +24,8 @@ class Sleekwaredb_Controller extends CI_Controller
 
     protected $update_version;
     protected $models;
+    protected $libraries;
+    protected $helpers;
     protected $form_data;
     protected $sleekDBConfig;
 
@@ -33,17 +36,23 @@ class Sleekwaredb_Controller extends CI_Controller
     {
         parent::__construct();
 
-        $this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
+        $this->load->driver('cache', array('adapter' => 'file'));
 
         // Define Model in Array Assoc
         $this->models = include APPPATH . '/loaders/models.php';
-        $this->form_data = ($this->input->method() == 'post') ? $this->input->post(null, true) : $this->input->get(null,  true);
-        $this->form_json = json_decode(file_get_contents('php://input'), true);
+        $this->libraries = include APPPATH . '/loaders/libraries.php';
+        $this->helpers = include APPPATH . '/loaders/helpers.php';
 
-        $this->load->library(['session', 'user_agent', 'encryption']);
-        $this->load->helper(['url', 'html', 'form', 'app', 'cookie']);
+        $this->load->library($this->libraries);
+        $this->load->helper($this->helpers);
 
         $this->encryption->initialize(array('driver' => 'openssl'));
+        $this->dotenv->load();
+        date_default_timezone_set(getenv('TIME_ZONE'));
+
+        $this->form_data = ($this->input->method() == 'post') ? $this->input->post(null, true) : $this->input->get(null,  true);
+        $bodyContent = file_get_contents('php://input');
+        $this->form_json = $bodyContent ? json_decode($bodyContent, true) : [];
 
         // default sleekDB configurations
         $this->sleekDBConfig = [
