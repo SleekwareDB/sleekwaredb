@@ -1,4 +1,5 @@
 <?php
+defined('BASEPATH') or exit('No direct script access allowed');
 
 use SleekDB\Query;
 use SleekDB\Store;
@@ -83,26 +84,66 @@ class Sleekwaredb_Model extends CI_Model
     }
 
     /**
-     * It creates a new database for the user, and creates a new API key for the user
+     * It creates a new database and stores the application details in the `apps` collection
      *
-     * @param email The email of the user
+     * @param payload An array of data that will be used to create the application.
      */
-    public function bootingUserApp($email)
+    public function bootingUserApp($payload)
     {
-        $storeCollections = ['apps','users','teams','projects','applications','rest_keys','rest_logs','rest_access','rest_limits'];
-        for ($i=0; $i < count($storeCollections); $i++) {
-            $this->store = new Store($storeCollections[$i], APP_DATABASE, $this->sleekDBConfig);
+        $error = true;
+        try {
+            $storeCollections = ['apps', 'users', 'teams', 'projects', 'applications', 'rest_keys', 'rest_logs', 'rest_access', 'rest_limits'];
+            for ($i = 0; $i < count($storeCollections); $i++) {
+                $this->store = new Store($storeCollections[$i], APP_DATABASE, $this->sleekDBConfig);
+            }
+
+            // Create super admin user
+            $this->collection('users')->insert(add_metadata([
+                'fullname' => $payload['fullname'],
+                'username' => $payload['username'],
+                'email' => $payload['email'],
+                'role' => 'super_admin'
+            ]));
+
+            // Store application Details
+            $this->collection('apps')->insert(add_metadata([
+                'applicationName' => $payload['applicationName'],
+                'applicationDescription' => $payload['applicationDescription'],
+                'applicationId' => guidv4(),
+                'applicationSecret' => random_string('encrypt', 32),
+                'configurations' => [
+                    'email' => [
+                        'from' => null,
+                        'fromName' => null,
+                        'replyTo' => null,
+                        'smtp' => [
+                            'debug' => null,
+                            'auth' => null,
+                            'host' => null,
+                            'port' => null,
+                            'username' => null,
+                            'password' => null,
+                            'secure' => null,
+                        ],
+                    ],
+                ]
+            ]));
+
+            // Create API Key for Super Account
+            $this->collection('rest_keys')->insert(add_metadata([
+                'email' => $payload['email'],
+                'key' => random_string('encrypt'),
+                'level' => 1,
+                'ignore_limits' => false,
+                'is_private_key' => false,
+                'ip_addresses' => null,
+                'date_created' => sleektime()
+            ]));
+        } catch (\Throwable $th) {
+            $error = false;
         }
-        // Create API Key for Super Account
-        $this->collection('rest_keys')->insert([
-            'email' => $email,
-            'key' => random_string('encrypt'),
-            'level' => 1,
-            'ignore_limits' => false,
-            'is_private_key' => false,
-            'ip_addresses' => null,
-            'date_created' => sleektime()
-        ]);
+
+        return $error;
     }
 
     public function allStores()
@@ -143,7 +184,7 @@ class Sleekwaredb_Model extends CI_Model
         return $this->store->count();
     }
 
-    public function collection_filterd($name)
+    public function collection_filtered($name)
     {
         $this->store = new Store($name, APP_DATABASE, $this->sleekDBConfig);
         $query = $this->store->createQueryBuilder();
