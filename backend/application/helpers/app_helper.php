@@ -3,269 +3,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use GuzzleHttp\Client;
-
-if (!function_exists('scanAdminLteAssetFiles')) {
-    function scanAdminLteAssetFiles($dir, &$results = array())
-    {
-        $files = scandir($dir);
-
-        foreach ($files as $value) {
-            $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
-            if (!is_dir($path)) {
-                $results[] = $path;
-            } else if (!in_array($value, array('.', '..','index.html', '.bin', '.package-lock.json'))) {
-                scanAdminLteAssetFiles($path, $results);
-                $results[] = $path;
-            }
-        }
-
-        $results = array_filter($results, function ($v) {
-            return !is_dir($v) === true && strpos($v, 'index.html') === false && strpos($v, '.map') === false;
-        });
-
-        $arrayKey = [];
-        foreach ( $results as $alias ) {
-            array_push($arrayKey, basename($alias));
-        }
-
-        $arrayValue = array_map(function ($v) {
-            return str_replace(FCPATH, '', $v);
-        }, $results);
-
-        $results = array_combine($arrayKey, $arrayValue);
-
-        return $results;
-    }
-}
-
-if (!function_exists('adminlte_loader')) {
-    function adminlte_loader()
-    {
-        $CI = get_instance();
-        $CI->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
-
-        $modelDir = FCPATH . 'assets' . DIRECTORY_SEPARATOR . 'adminlte' . DIRECTORY_SEPARATOR;
-
-        $cacheResults = $CI->cache->get('adminlte_loader');
-        if (!$cacheResults) {
-            $listOfFiles = scanAdminLteAssetFiles($modelDir);
-            $CI->cache->save('adminlte_loader', $listOfFiles, 86400);
-        } else {
-            $listOfFiles = $cacheResults;
-        }
-        return $listOfFiles;
-    }
-}
-
-if (!function_exists('adminlte')) {
-
-    /**
-     * Admin LTE Helper Asset
-     * @param string $uri  memuat posisi file yang disimpan dalam folder asset Admin LTE
-     * @param $asset
-     */
-    function adminlte(string $filename, $asset = false)
-    {
-        $filepath = adminlte_loader()[$filename];
-        if ($asset == false) {
-            return link_tag($filepath);
-        } else {
-            return base_url($filepath);
-        }
-    }
-}
-
-if (!function_exists('node_modules_loader')) {
-    function node_modules_loader()
-    {
-        $CI = get_instance();
-        $CI->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
-
-        $modelDir = FCPATH . 'node_modules' . DIRECTORY_SEPARATOR;
-
-        $cacheResults = $CI->cache->get('node_modules_loader');
-        if (!$cacheResults) {
-            $listOfFiles = scanAdminLteAssetFiles($modelDir);
-            $CI->cache->save('node_modules_loader', $listOfFiles, 86400);
-        } else {
-            $listOfFiles = $cacheResults;
-        }
-        return $listOfFiles;
-    }
-}
-
-if (!function_exists('node_modules')) {
-
-    /**
-     * Admin LTE Helper Asset
-     * @param string $uri  memuat posisi file yang disimpan dalam folder asset Admin LTE
-     * @param $asset
-     */
-    function node_modules(string $filename, $asset = false)
-    {
-        $filepath = node_modules_loader()[$filename];
-        if ($asset == false) {
-            return link_tag($filepath);
-        } else {
-            return base_url($filepath);
-        }
-    }
-}
-
-if (!function_exists('get_header')) {
-
-    /**
-     * @param array $data
-     */
-    function get_header(array $data = [])
-    {
-        $CI = &get_instance();
-        $CI->load->view('partials/header', $data);
-    }
-}
-
-if (!function_exists('get_footer')) {
-
-    /**
-     * @param array $data
-     */
-    function get_footer(array $data = [])
-    {
-        $CI = &get_instance();
-        $CI->load->view('partials/footer', $data);
-    }
-}
-
-if (!function_exists('load_js')) {
-
-    /**
-     * @param array $file_uri
-     * @return mixed
-     */
-    function load_js(array $file_uri)
-    {
-        $script = '';
-        foreach ($file_uri as $file) {
-            $script .= '<script src="' . base_url($file) . '" type="text/javascript"></script>' . PHP_EOL;
-        }
-
-        return $script;
-    }
-}
-
-if (!function_exists('script_tag')) {
-    /**
-     * @param $src
-     * @param $language
-     * @param $type
-     * @param $index_page
-     * @return mixed
-     */
-    function script_tag($src = '', $language = 'javascript', $type = 'text/javascript', $index_page = FALSE)
-    {
-        $CI     = &get_instance();
-        $script = '<scr' . 'ipt';
-        if (is_array($src)) {
-            foreach ($src as $k => $v) {
-                if ($k == 'src' and strpos($v, '://') === FALSE) {
-                    if ($index_page === TRUE) {
-                        $script .= ' src="' . $CI->config->site_url($v) . '"';
-                    } else {
-                        $script .= ' src="' . $CI->config->slash_item('base_url') . $v . '"';
-                    }
-                } else {
-                    $script .= "$k=\"$v\"";
-                }
-            }
-
-            $script .= "></scr" . "ipt>\n";
-        } else {
-            if (strpos($src, '://') !== FALSE) {
-                $script .= ' src="' . $src . '" ';
-            } elseif ($index_page === TRUE) {
-                $script .= ' src="' . $CI->config->site_url($src) . '" ';
-            } else {
-                $script .= ' src="' . $CI->config->slash_item('base_url') . $src . '" ';
-            }
-
-            $script .= 'language="' . $language . '" type="' . $type . '"';
-            $script .= ' /></scr' . 'ipt>' . "\n";
-        }
-
-        return $script;
-    }
-}
-
-if (!function_exists('load_css')) {
-
-    /**
-     * @param array $file_uri
-     * @return mixed
-     */
-    function load_css(array $file_uri)
-    {
-        $link = '';
-        if (!empty($file_uri['adminlte'])) {
-            foreach ($file_uri['adminlte'] as $file) {
-                $link .= adminlte($file) . PHP_EOL;
-            }
-        }
-
-        if (!empty($file_uri['app'])) {
-            foreach ($file_uri['app'] as $file) {
-                $link .= link_tag(ltrim($file, '/')) . PHP_EOL;
-            }
-        }
-
-        return $link;
-    }
-}
-
-if (!function_exists('breadcrumb')) {
-
-    /**
-     * @param array $links
-     * @return mixed
-     */
-    function breadcrumb(array $links = [])
-    {
-        $output = '<ol class="breadcrumb float-sm-right">';
-        foreach ($links as $key => $crumb) {
-            $links = array_keys($links);
-            if (end($links) == $key) {
-                $output .= '<li class="breadcrumb-item active">' . $crumb['title'] . '</li>';
-            } else {
-                $output .= '<li class="breadcrumb-item"><a href="' . $crumb['href'] . '">' . $crumb['title'] . '</a></li>';
-            }
-        }
-        $output .= '</ol>';
-
-        return $output;
-    }
-}
-
-if (!function_exists('is_logged_in')) {
-
-    function is_logged_in()
-    {
-        $CI = &get_instance();
-        if (get_session('databaseName')) {
-            redirect(base_url('dashboard'));
-        }
-    }
-}
-
-if (!function_exists('need_login')) {
-
-    function need_login()
-    {
-        $CI = &get_instance();
-        if (!get_session('databaseName')) {
-            redirect(base_url());
-        }
-    }
-}
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 
 if (!function_exists('get_client_ip')) {
 
@@ -283,22 +22,6 @@ if (!function_exists('get_client_ip')) {
         }
 
         return $ip;
-    }
-}
-
-if (!function_exists('dev_password')) {
-
-    /**
-     * @param $password
-     */
-    function dev_password($password)
-    {
-        $hash = password_hash('idbetta01', PASSWORD_DEFAULT);
-        if (password_verify($password, $hash)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 }
 
@@ -334,25 +57,6 @@ if (!function_exists('encrypt_decrypt')) {
     }
 }
 
-if (!function_exists('get_role')) {
-
-    /**
-     * @param int $id
-     * @return mixed
-     */
-    function get_role(int $id, $key = null)
-    {
-        if ($id == 201) {
-            return 'Developer';
-        } else {
-            $CI = &get_instance();
-            $CI->load->model('role_model');
-
-            return $CI->role_model->get_role_by_id($id, $key);
-        }
-    }
-}
-
 if (!function_exists('debug')) {
 
     /**
@@ -371,16 +75,18 @@ if (!function_exists('debug')) {
     }
 }
 
-if (!function_exists('get_session')) {
+if (!function_exists('dump')) {
 
     /**
-     * @param $sess_key
-     * @return mixed
+     * @param $data
+     * @param $die
      */
-    function get_session($sess_key)
+    function dump($data, $die = false)
     {
-        $session = get_auth();
-        return $session[$sess_key] ?? null;
+        echo "<pre>";
+        var_dump($data);
+        echo "</pre>";
+        if ($die) die();
     }
 }
 
@@ -463,73 +169,23 @@ if (!function_exists('format_phone_number')) {
     }
 }
 
-if (!function_exists('default_config')) {
-
-    /**
-     * @param $name
-     * @return mixed
-     */
-    function default_config($name)
+if (!function_exists('get_version')) {
+    function get_version()
     {
-        $CI = &get_instance();
-        $CI->load->helper('url');
-        $app_config = [
-            'app-name'                   => 'AdminLTE Codeigniter Bolierplate',
-            'app-icon'                   => base_url('aseets/img/favicon.png'),
-            'app-sidebar'                => 'sidebar-mini',
-            'app-navbar-border'          => 'default',
-            'app-body-small-text'        => 'default',
-            'app-navbar-small-text'      => 'default',
-            'app-sidebar-small-text'     => 'default',
-            'app-footer-small-text'      => 'default',
-            'app-sidebar-style'          => 'default',
-            'app-brand-size'             => 'default',
-            'app-cache'                  => 'off',
-            'email-protocol'             => 'smtp',
-            'email-host'                 => 'smtp.mailtrap.io',
-            'email-port'                 => '2525',
-            'email-user'                 => '8977c81cc7e443',
-            'email-password'             => '886dba3e3164d8',
-            'google-recaptcha-sitekey'   => '',
-            'google-recaptcha-secretkey' => '',
-        ];
-
-        return $app_config[$name];
+        $composer_file = file_get_contents(FCPATH . 'composer.json');
+        $composer_json = json_decode($composer_file, true);
+        $version       = $composer_json['version'];
+        return $version;
     }
 }
 
-if (!function_exists('get_version')) {
-
-    /**
-     * @return mixed
-     */
-    function get_version()
+if (!function_exists('sleekdb_version')) {
+    function sleekdb_version()
     {
-        try {
-            $file_src = APPPATH . '/helpers/version.txt';
-            $version  = current(file($file_src));
-            $limit    = time() - 3600 * 24 * 7;
-            if (!empty($version) && filemtime($file_src) < $limit) {
-                $client = new Client([
-                    'timeout' => 200000,
-                    'headers' => [
-                        'PRIVATE-TOKEN' => 'iMc5W9Sx64UfGyBkdyF_',
-                    ],
-                ]);
-                $request  = $client->request('GET', 'https://gitlab.com/api/v4/projects/20645136/releases');
-                $response = json_decode($request->getBody(), true);
-                $version  = current($response);
-                file_put_contents(APPPATH . '/helpers/version.txt', (empty($version)) ? 'v.1.0-beta' : $version['tag_name']);
-
-                return (empty($version)) ? 'v.1.0-beta' : $version['tag_name'];
-            } else {
-                return $version;
-            }
-        } catch (Exception $e) {
-            $version = current(file(APPPATH . '/helpers/version.txt'));
-
-            return $version;
-        }
+        $composer_file  = file_get_contents(FCPATH . 'composer.json');
+        $composer_json  = json_decode($composer_file, true);
+        $version        = str_replace('^', '', $composer_json['require']['rakibtg/sleekdb']);
+        return $version;
     }
 }
 
@@ -567,84 +223,6 @@ if (!function_exists('rand_phonenumber')) {
         }
 
         return $phone_array;
-    }
-}
-
-if (!function_exists('is_connected')) {
-
-    function is_connected()
-    {
-        $connected = @fsockopen("www.example.com", 80); //website, port  (try 80 or 443)
-        if ($connected) {
-            $is_conn = true; //action when connected
-            fclose($connected);
-        } else {
-            $is_conn = false; //action in connection failure
-        }
-
-        return $is_conn;
-    }
-}
-
-if (!function_exists('clear_all_cache')) {
-
-    /**
-     * Clears all cache from the cache directory
-     */
-    function clear_all_cache()
-    {
-        $CI   = &get_instance();
-        $path = $CI->config->item('cache_path');
-
-        $cache_path = ($path == '') ? APPPATH . 'cache/' : $path;
-        $status     = false;
-        try {
-
-            $handle = opendir($cache_path);
-            while (($file = readdir($handle)) !== FALSE) {
-                //Leave the directory protection alone
-                if ($file != '.htaccess' && $file != 'index.html') {
-                    @unlink($cache_path . '/' . $file);
-                }
-            }
-            closedir($handle);
-            $status = true;
-        } catch (Exception $e) {
-            $status = false;
-        }
-
-        return $status;
-    }
-}
-
-if (!function_exists('count_cache')) {
-
-    function count_cache()
-    {
-        $totalSize = 0;
-        foreach (new DirectoryIterator(APPPATH . 'cache/') as $file) {
-            if ($file->isFile()) {
-                $totalSize += $file->getSize();
-            }
-        }
-
-        return round(($totalSize / 1048576), 2) . ' MB';
-    }
-}
-
-if (!function_exists('check_system_configurations')) {
-
-    function check_system_configurations()
-    {
-        $dwa_system = [
-            'file_and_directories' => [
-                'assets' => FCPATH . 'assets/',
-                'cache'  => APPPATH . 'cache/'
-            ],
-            'extensions_load'      => get_loaded_extensions(),
-        ];
-
-        return $dwa_system;
     }
 }
 
@@ -780,50 +358,6 @@ if (!function_exists('shorten_number')) {
     }
 }
 
-if (!function_exists('bs_validation_message')) {
-    function bs_validation_message($valid_msg = null, $invalid_msg = null)
-    {
-        $success_msg = ($valid_msg == null) ? 'Data terisi dengan baik!' : $valid_msg;
-        $error_msg = ($invalid_msg == null) ? 'Silahkan isi kolom ini.' : $invalid_msg;
-        $template = '
-        <div class="valid-feedback">' . $success_msg . '</div>
-        <div class="invalid-feedback">' . $error_msg . '</div>
-        ';
-        return $template;
-    }
-}
-
-if (!function_exists('redirect_by_role')) {
-    function redirect_by_role()
-    {
-        $nama_jabatan = get_session('nama_jabatan');
-        switch ($nama_jabatan) {
-            case 'super-admin':
-                redirect('super/dashboard');
-                break;
-            case 'administrator':
-                redirect('administrator/dashboard');
-                break;
-            case 'karyawan':
-                redirect('karyawan/dashboard');
-                break;
-        }
-    }
-}
-
-if (!function_exists('sidebar_active')) {
-    function sidebar_active($uri, $class = 'active')
-    {
-        if (is_array($uri)) {
-            $link_active = (in_array(current_url(), $uri)) ? 'menu-open' : '';
-        } else {
-            $link_active = (current_url() == base_url($uri)) ? $class : '';
-        }
-
-        return $link_active;
-    }
-}
-
 if (!function_exists('bulan_indo')) {
     function bulan_indo()
     {
@@ -895,12 +429,13 @@ if (!function_exists('isInstalled')) {
 }
 
 if (!function_exists('app_config')) {
-    function app_config($key)
+    function app_config(array $key)
     {
+        $alias = current(array_keys($key));
         $CI =& get_instance();
         $CI->load->model('app_model', 'app');
         $data = $CI->app->getAppValue($key);
-        return (empty($data)) ? [] : $data[$key];
+        return (empty($data)) ? [] : $data[$alias];
     }
 }
 
@@ -926,58 +461,86 @@ if (!function_exists('sleektime')) {
 if (!function_exists('encode_auth_token')) {
     function encode_auth_token(array $payload)
     {
-        $data = array_merge($payload, [
-            'iat' => microtime(true)
-        ]);
-        $jwt = JWT::encode($data, $payload['uuid'], 'HS256');
+        $jwt = JWT::encode($payload, PASSCODE, 'HS256');
         return $jwt;
     }
 }
 
 if (!function_exists('decode_auth_token')) {
-    function decode_auth_token($jwt, $key)
+    function decode_auth_token($jwt)
     {
-        JWT::$leeway = 2628000;
-        $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
+        JWT::$leeway = 604800;
+        $decoded = JWT::decode($jwt, new Key(PASSCODE, 'HS256'));
         return (array) $decoded;
     }
 }
 
-if (!function_exists('set_auth')) {
-    function set_auth($key, $data)
+if (!function_exists('token_middleware')) {
+    function token_middleware()
     {
         $CI =& get_instance();
-        $CI->input->set_cookie([
-            'name' => $key,
-            'value' => base64_encode(json_encode($data)),
-            'expire' => '2628000',
-            'path' => '/',
-            'prefix' => '',
-            'secure' => true,
-            'httponly' => true
-        ]);
+        if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+            $token = preg_match('/Bearer\s(\S+)/', $_SERVER['HTTP_AUTHORIZATION'], $matches);
+            if (empty($matches[0])) {
+                $CI->output
+                ->set_content_type('application/json')
+                ->set_status_header(400)
+                ->set_output([
+                    'status' => false,
+                    'type' => 'error',
+                    'code' => 400,
+                    'msg' => 'Token not found in request'
+                ]);
+                exit;
+            }
 
-        $CI->input->set_cookie([
-            'name' => 'SLEEKDB_AUTH',
-            'value' => $key,
-            'expire' => '2628000',
-            'path' => '/',
-            'prefix' => '',
-            'secure' => true,
-            'httponly' => true
-        ]);
-    }
-}
+            $jwt = $matches[1];
+            if (empty($jwt)) {
+                // No token was able to be extracted from the authorization header
+                $CI->output
+                ->set_content_type('application/json')
+                ->set_status_header(400)
+                    ->set_output([
+                        'status' => false,
+                        'type' => 'error',
+                        'code' => 400,
+                        'msg' => 'Bad Request'
+                    ]);
+                exit;
+            }
 
-if (!function_exists('get_auth')) {
-    function get_auth($key = 'SLEEKDB_AUTH')
-    {
-        $CI =& get_instance();
-        $cookie = $CI->input->cookie($key);
-        $token_key = (empty($cookie)) ? [] : $cookie;
-        $jwt = $CI->input->cookie($token_key);
-        $encoded = (empty($jwt)) ? null : json_decode(base64_decode($jwt), true);
-        return (empty($encoded)) ? null : decode_auth_token($encoded, $token_key);
+            $token = decode_auth_token($jwt);
+            $now = new DateTimeImmutable();
+            $serverName = $CI->input->server('SERVER_NAME');
+
+            if (
+                $token['iss'] !== $serverName ||
+                $token['nbf'] > $now->getTimestamp() ||
+                $token['exp'] < $now->getTimestamp()
+            ) {
+                $CI->output
+                ->set_content_type('application/json')
+                ->set_status_header(401)
+                    ->set_output([
+                        'status' => false,
+                        'type' => 'warning',
+                        'code' => 401,
+                        'msg' => 'Unauthorized'
+                    ]);
+                exit;
+            }
+        } else {
+            $CI->output
+                ->set_content_type('application/json')
+                ->set_status_header(401)
+                ->set_output([
+                    'status' => false,
+                    'type' => 'warning',
+                    'code' => 401,
+                    'msg' => 'Request not authorized'
+                ]);
+            exit;
+        }
     }
 }
 
@@ -1004,29 +567,121 @@ if (!function_exists('update_metadata')) {
     }
 }
 
-if (!function_exists('create_modal')) {
-    function create_modal($modalId, $modalFormName)
+if (!function_exists('delete_metadata')) {
+    function delete_metadata(array $store)
     {
-        $modal = '
-        <div class="modal fade" id="'. $modalId .'" tabindex="-1" backdrop="static">
-            <form method="post" autocomplete="off" id="'. $modalFormName .'" class="needs-validation" novalidate>
-                <div class="modal-dialog modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Modal title</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Modal body text goes here.</p>
-                        </div>
-                        <div class="modal-footer"></div>
-                    </div>
-                </div>
-            </form>
-        </div>
-        ';
-        return $modal;
+        $data = array_merge($store, [
+            'deletedAt' => sleektime()
+        ]);
+        return $data;
+    }
+}
+
+if (!function_exists('json_validate')) {
+    function json_validate($string)
+    {
+        // decode the JSON data
+        $result = json_decode($string, true);
+
+        // switch and check possible JSON errors
+        switch (json_last_error()) {
+            case JSON_ERROR_NONE:
+                $error = ''; // JSON is valid // No error has occurred
+                break;
+            case JSON_ERROR_DEPTH:
+                $error = 'The maximum stack depth has been exceeded.';
+                break;
+            case JSON_ERROR_STATE_MISMATCH:
+                $error = 'Invalid or malformed JSON.';
+                break;
+            case JSON_ERROR_CTRL_CHAR:
+                $error = 'Control character error, possibly incorrectly encoded.';
+                break;
+            case JSON_ERROR_SYNTAX:
+                $error = 'Syntax error, malformed JSON.';
+                break;
+                // PHP >= 5.3.3
+            case JSON_ERROR_UTF8:
+                $error = 'Malformed UTF-8 characters, possibly incorrectly encoded.';
+                break;
+                // PHP >= 5.5.0
+            case JSON_ERROR_RECURSION:
+                $error = 'One or more recursive references in the value to be encoded.';
+                break;
+                // PHP >= 5.5.0
+            case JSON_ERROR_INF_OR_NAN:
+                $error = 'One or more NAN or INF values in the value to be encoded.';
+                break;
+            case JSON_ERROR_UNSUPPORTED_TYPE:
+                $error = 'A value of a type that cannot be encoded was given.';
+                break;
+            default:
+                $error = 'Unknown JSON error occured.';
+                break;
+        }
+
+        if ($error !== '') {
+            // throw the Exception or exit // or whatever :)
+            exit($error);
+        }
+
+        // everything is OK
+        return $result;
+    }
+}
+
+if (!function_exists('app_config')) {
+    function app_config($key)
+    {
+        $CI =& get_instance();
+        $CI->load->model('core/app_model', 'app');
+        $value = $CI->app->getAppValue($key);
+        return (!empty($value)) ? $value : null;
+    }
+}
+
+if (!function_exists('sleekwaredb_mailer')) {
+    function sleekwaredb_mailer($to, $subject, $message, $html = false)
+    {
+        $CI = &get_instance();
+
+        $smtp_host = app_config(['host' => 'configurations.email.smtp.host']);
+        $smtp_port = app_config(['port' => 'configurations.email.smtp.port']);
+        $from = app_config(['from' => 'configurations.email.from']);
+        $fromName = app_config(['fromName' => 'configurations.email.fromName']);
+
+        try {
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host       = $smtp_host;
+            $mail->Port       = $smtp_port;
+            $mail->setFrom($from, $fromName);
+            $mail->addAddress($to);
+            $mail->isHTML($html);
+            $mail->Subject = $subject;
+            $mail->Body    = $message;
+            $mail->AltBody = $message;
+
+            $mail->send();
+            log_message('info', 'Email has been sent!');
+            return true;
+        } catch (Exception $e) {
+            log_message('error', "Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+            return false;
+        }
+    }
+}
+
+if (!function_exists('array_keys_multi')) {
+    function array_keys_multi(array $array)
+    {
+        $keys = array();
+        foreach ($array as $key => $value) {
+            $keys[] = $key;
+            if (is_array($value)) {
+                $keys = array_merge($keys, array_keys_multi($value));
+            }
+        }
+        return $keys;
     }
 }
