@@ -8,37 +8,45 @@ class App_model extends Sleekwaredb_Model
         parent::__construct();
     }
 
-    public function checkIfInstalled()
+    private function checkIfInstalled()
     {
-        return $this->coreAppCollection() > 0;
+        return $this->coreAppCollection() ? true : false;
     }
 
-    public function save( array $data )
+    public function firstInstall( array $data )
     {
-        $appData = [
-            'applicationName' => $data['applicationName'],
-            'applicationDescription' => $data['applicationDescription'],
-            'appId' => $data['appId'],
-            'appSecret' => $data['appSecret']
-        ];
-        $this->collection('apps')->insert(add_metadata($appData));
-
-        $userData = [
-            'fullname' => $data['fullname'],
-            'email' => $data['email'],
-            'password' => password_hash($data['password'], PASSWORD_DEFAULT),
-            'role' => 'super',
-        ];
-        $this->collection('users')->insert(add_metadata($userData));
-
-        if (checkIsAlreadyBoot($data['email']) === false) {
-            $this->bootingUserApp($data['email']);
+        if ($this->checkIfInstalled() === false) {
+            return $this->bootingUserApp($data);
+        } else {
+            return false;
         }
+    }
+
+    public function checkIfEmailIsSet()
+    {
+        $checker = $this->collection('apps')->createQueryBuilder();
+        $result = $checker->select(['configurations.emails.from', 'configurations.emails.fromName'])
+            ->where(['configurations.emails.from', '!=', null])
+            ->where(['configurations.emails.fromName', '!=', null])->getQuery()->fetch();
+        return $result ? true : false;
     }
 
     public function getAppValue($key)
     {
         $app = $this->collection('apps')->createQueryBuilder();
-        return $app->select(["{$key}"])->getQuery()->first();
+        return $app->select($key)->getQuery()->first();
+    }
+
+    public function all()
+    {
+        $app = $this->store('apps')->findOneBy(['_id', '=', 1]);
+        $secured = array_diff_key($app, array_flip(['uuid', '_id', 'deletedAt', 'createdAt', 'updatedAt']));
+        return $secured;
+    }
+
+    public function updateConfig(array $data)
+    {
+        $app = $this->store('apps')->createQueryBuilder();
+        return $app->where(['_id','=', 1])->getQuery()->update($data);
     }
 }

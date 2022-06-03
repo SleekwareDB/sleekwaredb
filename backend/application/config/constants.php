@@ -84,8 +84,7 @@ defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
-defined('APP_DATABASE') OR define('APP_DATABASE', APPPATH . 'database/');
-defined('STORAGE') OR define('STORAGE', APP_DATABASE . 'sleekstores/');
+defined('APP_DATABASE') OR define('APP_DATABASE', APPPATH . 'database' . DIRECTORY_SEPARATOR);
 defined('PASSCODE') OR define('PASSCODE', 'pronounce7-derived-stony-vitality-magnesium-babbling-bridged-fondness');
 defined('APP_NAME') OR define('APP_NAME', 'SleekwareDB');
-defined('KEY_TOKEN') OR define('KEY_TOKEN', '%eK^@PBNLd98XC%@BxSwM9AgkGNU$X');
+defined('VFS') OR define('VFS', APPPATH. 'vfs' . DIRECTORY_SEPARATOR);

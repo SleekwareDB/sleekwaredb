@@ -54,10 +54,12 @@
  * NOTE: If you change these, also change the error_reporting() code below
  */
 $domain = !empty($_SERVER['HTTP_HOST']) ? strtolower($_SERVER['HTTP_HOST']) : 'cli';
+$localdomain = 'backend.test'; // change this variable value with your local domain
+$testingdomain = 'dev.sleekware.com'; // change this variable value with your testing domain
 
-if ($domain === 'sleekware.test/backend' || $domain == 'localhost' || $domain == 'cli') {
+if ($domain === $localdomain || $domain == 'localhost' || $domain == 'cli') {
 	define('ENVIRONMENT', 'development');
-} else if ($domain === 'dev.sleekware.com') {
+} else if ($domain === $testingdomain) {
 	define('ENVIRONMENT', 'testing');
 } else {
 	define('ENVIRONMENT', 'production');

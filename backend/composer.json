@@ -1,8 +1,9 @@
 {
-    "name": "sleekware/sleekware",
+    "name": "sleekwaredb/sleekwaredb",
     "description": "SleekwareDB is a NoSQL database storage service. A database storage service that can be used for various platforms and is easy to integrate.",
     "type": "project",
     "license": "MIT",
+    "version": "1.0.0",
     "authors": [
         {
             "name": "Imam Ali Mustofa",
@@ -13,7 +14,9 @@
         "php": "^7.4|^8.0",
         "rakibtg/sleekdb": "^2.13",
         "guzzlehttp/guzzle": "^7.4",
-        "firebase/php-jwt": "^6.2"
+        "firebase/php-jwt": "^6.2",
+        "rakit/validation": "^1.4",
+        "phpmailer/phpmailer": "^6.6"
     },
     "suggest": {
         "paragonie/random_compat": "Provides better randomness in PHP 5.x"

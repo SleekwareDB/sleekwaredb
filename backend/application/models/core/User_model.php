@@ -23,39 +23,8 @@ class User_model extends Sleekwaredb_model
         return [
             'total' => count($data->fetch()),
             'data' => $data->fetch(),
-            'filtered' => $this->collection_filterd('users')
+            'filtered' => $this->collection_filtered('users')
         ];
-    }
-
-    /**
-     * > It checks if the user exists in the database, and if it does, it checks if the password is
-     * correct
-     *
-     * @param email The email address of the user
-     * @param password The password to verify.
-     *
-     * @return The status code of the login attempt.
-     */
-    public function checkLogin($email, $password)
-    {
-        $user = $this->collection('users');
-        $data = $user->findOneBy(['email', '=', $email]);
-        if ( !empty($data) ) {
-            if ( password_verify($password, $data['password']) ) {
-                $token = encode_auth_token([
-                    'uuid' => $data['uuid'],
-                    'databaseName' => md5($email),
-                    'fullname' => $data['fullname'],
-                    'email' => $data['email']
-                ]);
-                set_auth($data['uuid'], $token);
-                return 200;
-            } else {
-                return 401;
-            }
-        } else {
-            return 404;
-        }
     }
 
     /**
@@ -91,46 +60,26 @@ class User_model extends Sleekwaredb_model
         }
     }
 
-    public function detail( $uuid = null )
-    {
-        $uid = $uuid ?? get_session('uuid');
-        $user = $this->collection('users');
-        return $user->findOneBy(['uuid','=', $uid]);
-    }
-
     public function all()
     {
         $user = $this->collection('users')->findAll(["_id" => "desc"]);
         return $user;
     }
 
-    public function verifyAccessToken($email, $password)
+    public function authenticate($username, $email)
     {
         $user = $this->collection('users');
+        $data = $user->findOneBy([
+            ['username', '=', $username],
+            ['email', '=', $email],
+        ]);
+        return $data;
+    }
+
+    public function getApiKey($email)
+    {
+        $user = $this->collection('rest_keys');
         $data = $user->findOneBy(['email', '=', $email]);
-        if (!empty($data)) {
-            if (password_verify($password, $data['password'])) {
-                $api = $this->collection('rest_keys')->findOneBy(['email','=', $email]);
-                return [
-                    'code' => 200,
-                    'token' => encode_auth_token([
-                        'uuid' => $data['uuid'],
-                        'fullname' => $data['fullname'],
-                        'email' => $data['email']
-                    ]),
-                    'apikey' => $api['key']
-                ];
-            } else {
-                return [
-                    'code' => 401,
-                    'token' => null,
-                ];
-            }
-        } else {
-            return [
-                'code' => 404,
-                'token' => null
-            ];
-        }
+        return $data['key'];
     }
 }
