@@ -6,8 +6,8 @@ open_collective: sleekwaredb
 ko_fi: imamalimustofa
 # tidelift: # Replace with a single Tidelift platform-name/package-name e.g., npm/babel
 # community_bridge: # Replace with a single Community Bridge project-name e.g., cloud-foundry
-# liberapay: # Replace with a single Liberapay username
-# issuehunt: # Replace with a single IssueHunt username
+liberapay: darkterminal
+issuehunt: darkterminal
 # otechie: # Replace with a single Otechie username
 # lfx_crowdfunding: # Replace with a single LFX Crowdfunding project-name e.g., cloud-foundry
 custom: ['https://www.buymeacoffee.com/darkterminal', 'https://www.paypal.me/lazarusalhambra', 'https://saweria.co/darkterminal']
