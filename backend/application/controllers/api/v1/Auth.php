@@ -12,6 +12,8 @@ class Auth extends Sleekwaredb_Controller
         if ($this->input->method(true) === 'POST') {
             $username = $this->form_json['username'];
             $email = $this->form_json['email'];
+            $redirect = $this->form_json['redirect'] ?? null;
+            $fallback = $this->form_json['fallback'] ?? null;
 
             $user = $this->core_user->authenticate($username, $email);
 
@@ -34,8 +36,37 @@ class Auth extends Sleekwaredb_Controller
 
                 $apikey = $this->core_user->getApiKey($email);
 
-                if ($this->core_app->checkIfEmailIsSet()) {
-                    // TODO: Send email magic link
+                $isEmailSet = (!is_null(app_config(['from' => 'configurations.email.from'])) && !is_null(app_config(['fromName' => 'configurations.email.fromName'])));
+
+                if ($isEmailSet && !empty($redirect) && !empty($fallback)) {
+                    // Send email magic link
+                    $uniqueMagicToken = guidv4();
+                    $magicLink = base_url('authorization') . '?redirect=' . base64_encode($redirect) . '&fallback='. base64_encode($fallback) .'&token=' . $uniqueMagicToken;
+                    $sentEmail = sleekwaredb_mailer($email, '[Magic Link SleekwareDB] Login request', 'Login requested from ' . $username, [
+                        'subject' => 'Login requested from ' . $username,
+                        'username' => $username,
+                        'magic_link' => $magicLink
+                    ], true);
+
+                    if ( $sentEmail ) {
+                        $data = ['uniqueMagicToken' => $uniqueMagicToken];
+                        $this->core_user->generateMagicKey($user['_id'], $data);
+                        $response = [
+                            'status' => true,
+                            'type' => 'success',
+                            'code' => Sleekwaredb_Controller::HTTP_OK,
+                            'msg' => 'Magic Link has been sent to your email! Please check your email.',
+                            'result' => []
+                        ];
+                    } else {
+                        $response = [
+                            'status' => false,
+                            'type' => 'error',
+                            'code' => Sleekwaredb_Controller::HTTP_INTERNAL_ERROR,
+                            'msg' => 'Failed to send magic link to your email! Please try again.',
+                            'result' => []
+                        ];
+                    }
                 } else {
                     $response = [
                         'status' => true,

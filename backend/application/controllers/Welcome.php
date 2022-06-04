@@ -30,4 +30,18 @@ class Welcome extends Sleekwaredb_Controller {
 			'message' => 'Page not found'
 		], Sleekwaredb_Controller::HTTP_NOT_FOUND);
 	}
+
+	public function authorization()
+	{
+		$redirect_link = base64_decode($this->form_data['redirect']);
+		$fallback_link = base64_decode($this->form_data['fallback']);
+		$token = $this->form_data['token'];
+		if ( $this->core_user->validateMagicKey($token) ) {
+			echo "<h1>Wait for redirect to $redirect_link</h1>";
+			redirect($redirect_link, 'refresh');
+		} else {
+			echo "<h2>Invalid token $token</h2>";
+			redirect($fallback_link, 'refresh');
+		}
+	}
 }
