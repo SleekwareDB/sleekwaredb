@@ -76,4 +76,45 @@ class Configuration extends Rest_Controller
 
         $this->response($response, $response['code']);
     }
+
+    public function recovery_code_post()
+    {
+        $email = $this->form_json['email'];
+        $username = $this->form_json['username'];
+
+        // Check if username and email have recovery code
+        $checkRecoveryCode = $this->core_user->checkForRecoveryCode($username, $email);
+        if (!$checkRecoveryCode) {
+            $passPharse = random_words();
+            $isGenerated = $this->core_user->generateRecoveryCode($username, $email, $passPharse);
+            if ($isGenerated) {
+                $response = [
+                    'status' => true,
+                    'type' => 'success',
+                    'code' => Sleekwaredb_Controller::HTTP_CREATED,
+                    'msg' => 'Recovery code successfully generated',
+                    'result' => [
+                        'recovery_code' => $passPharse
+                    ]
+                ];
+            } else {
+                $response = [
+                    'status' => false,
+                    'type' => 'error',
+                    'code' => Sleekwaredb_Controller::HTTP_INTERNAL_ERROR,
+                    'msg' => 'Recovery code failed generated',
+                    'result' => []
+                ];
+            }
+        } else {
+            $response = [
+                'status' => false,
+                'type' => 'error',
+                'code' => Sleekwaredb_Controller::HTTP_INTERNAL_ERROR,
+                'msg' => 'Recovery code already generated',
+                'result' => []
+            ];
+        }
+        $this->response($response, $response['code']);
+    }
 }

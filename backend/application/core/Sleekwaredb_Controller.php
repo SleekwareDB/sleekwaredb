@@ -57,7 +57,7 @@ class Sleekwaredb_Controller extends CI_Controller
         // default sleekDB configurations
         $this->sleekDBConfig = [
             "auto_cache" => true,
-            "cache_lifetime" => null,
+            "cache_lifetime" => 240, // 4 minutes
             "timeout" => false,
             "primary_key" => "_id",
             "search" => [
