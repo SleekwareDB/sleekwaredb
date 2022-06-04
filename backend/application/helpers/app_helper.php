@@ -779,3 +779,35 @@ if (!function_exists('array_keys_multi')) {
         return $keys;
     }
 }
+
+if (!function_exists('random_words')) {
+    /**
+     * It takes two arguments, the number of words to generate and the length of each word. It then
+     * loops through the number of words and generates a random word of the specified length
+     *
+     * @param int words The number of words you want to generate.
+     * @param int length The length of each word.
+     *
+     * @return string A string of random words.
+     */
+    function random_words($words = 12, $length = 6)
+    {
+        $string = '';
+        for ($o = 1; $o <= $words; $o++) {
+            $vowels = array("a", "e", "i", "o", "u");
+            $consonants = array(
+                'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm',
+                'n', 'p', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'
+            );
+
+            $word = '';
+            for ($i = 1; $i <= $length; $i++) {
+                $word .= $consonants[rand(0, 19)];
+                $word .= $vowels[rand(0, 4)];
+            }
+            $string .= substr($word, 0, $length);
+            $string .= "-";
+        }
+        return substr($string, 0, -1);
+    }
+}
