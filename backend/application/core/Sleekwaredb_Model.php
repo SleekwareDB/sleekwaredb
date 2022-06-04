@@ -102,7 +102,8 @@ class Sleekwaredb_Model extends CI_Model
                 'fullname' => $payload['fullname'],
                 'username' => $payload['username'],
                 'email' => $payload['email'],
-                'role' => 'super_admin'
+                'role' => 'super_admin',
+                'uniqueMagicToken' => null,
             ]));
 
             // Store application Details

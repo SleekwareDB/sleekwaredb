@@ -68,12 +68,34 @@ class User_model extends Sleekwaredb_model
 
     public function authenticate($username, $email)
     {
-        $user = $this->collection('users');
+        $user = $this->store('users');
         $data = $user->findOneBy([
             ['username', '=', $username],
             ['email', '=', $email],
         ]);
         return $data;
+    }
+
+    public function generateMagicKey(int $id, array $data)
+    {
+        $query = $this->store('users');
+        $user = $query->findById($id);
+        foreach ($data as $key => $value) {
+            $user[$key] = $value;
+        }
+        return $query->update($user);
+    }
+
+    public function validateMagicKey(string $key)
+    {
+        $query = $this->store('users');
+        $user = $query->findOneBy(['uniqueMagicToken', '=', $key]);
+        if (!empty($user)) {
+            $user['uniqueMagicToken'] = null;
+            return $query->update($user);
+        } else {
+            return false;
+        }
     }
 
     public function getApiKey($email)
