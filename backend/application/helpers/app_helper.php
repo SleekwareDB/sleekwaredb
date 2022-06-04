@@ -5,6 +5,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
+use Rakit\Validation\Rules\Numeric;
 
 if (!function_exists('get_client_ip')) {
 
@@ -184,7 +185,7 @@ if (!function_exists('sleekdb_version')) {
     {
         $composer_file  = file_get_contents(FCPATH . 'composer.json');
         $composer_json  = json_decode($composer_file, true);
-        $version        = str_replace('^', '', $composer_json['require']['rakibtg/sleekdb']);
+        $version        = preg_replace('/[^0-9.]/', '', $composer_json['require']['rakibtg/sleekdb']);
         return $version;
     }
 }
@@ -447,6 +448,13 @@ if (!function_exists('checkIsAlreadyBoot')) {
 }
 
 if (!function_exists('sleektime')) {
+    /**
+     * It returns the current time in milliseconds.
+     *
+     * @param string format The format you want the date to be in.
+     *
+     * @return string|number The current time in milliseconds.
+     */
     function sleektime($format = null)
     {
         $epoch = round(microtime(true) * 1000);
@@ -459,6 +467,13 @@ if (!function_exists('sleektime')) {
 }
 
 if (!function_exists('encode_auth_token')) {
+    /**
+     * It encodes the payload with the passcode and returns the encoded string.
+     *
+     * @param array payload The payload is the data that you want to send to the client.
+     *
+     * @return string A JWT token
+     */
     function encode_auth_token(array $payload)
     {
         $jwt = JWT::encode($payload, PASSCODE, 'HS256');
@@ -467,6 +482,13 @@ if (!function_exists('encode_auth_token')) {
 }
 
 if (!function_exists('decode_auth_token')) {
+    /**
+     * Decodes the JWT token
+     *
+     * @param string jwt The JWT to decode
+     *
+     * @return array An array of the decoded JWT.
+     */
     function decode_auth_token($jwt)
     {
         JWT::$leeway = 604800;
@@ -476,6 +498,10 @@ if (!function_exists('decode_auth_token')) {
 }
 
 if (!function_exists('token_middleware')) {
+    /**
+     * It checks if the request has an authorization header, if it does, it checks if the token is
+     * valid, if it is, it continues, if it isn't, it returns a 401
+     */
     function token_middleware()
     {
         $CI =& get_instance();
@@ -545,6 +571,13 @@ if (!function_exists('token_middleware')) {
 }
 
 if (!function_exists('add_metadata')) {
+    /**
+     * It takes an array, adds a few more key-value pairs to it, and returns the new array
+     *
+     * @param array store The array of data to be stored in the database.
+     *
+     * @return array the array  with the additional metadata.
+     */
     function add_metadata(array $store)
     {
         $data = array_merge($store, [
@@ -558,6 +591,14 @@ if (!function_exists('add_metadata')) {
 }
 
 if (!function_exists('update_metadata')) {
+    /**
+     * It takes an array, merges it with another array, and returns the result
+     *
+     * @param array store The array of data to be updated
+     *
+     * @return array The array  is being merged with the array containing the updatedAt key and the
+     * sleektime() function.
+     */
     function update_metadata(array $store)
     {
         $data = array_merge($store, [
@@ -568,6 +609,14 @@ if (!function_exists('update_metadata')) {
 }
 
 if (!function_exists('delete_metadata')) {
+    /**
+     * It takes an array of data and adds a `deletedAt` key with the current time
+     *
+     * @param array store The array of data to be stored in the database.
+     *
+     * @return array The array  is being merged with the array containing the key 'deletedAt' and the
+     * value sleektime().
+     */
     function delete_metadata(array $store)
     {
         $data = array_merge($store, [
@@ -578,6 +627,14 @@ if (!function_exists('delete_metadata')) {
 }
 
 if (!function_exists('json_validate')) {
+    /**
+     * It will return the decoded JSON data if the JSON is valid, or it will exit with an error message
+     * if the JSON is invalid
+     *
+     * @param string The string to be decoded.
+     *
+     * @return array the result of the json_decode function.
+     */
     function json_validate($string)
     {
         // decode the JSON data
@@ -631,6 +688,13 @@ if (!function_exists('json_validate')) {
 }
 
 if (!function_exists('app_config')) {
+    /**
+     * It returns the value of a key from the database
+     *
+     * @param array key The key of the value you want to retrieve eg: ["fromName" => "configurations.email.fromName"].
+     *
+     * @return string|array The value of the key in the app_config table.
+     */
     function app_config($key)
     {
         $CI =& get_instance();
@@ -641,12 +705,26 @@ if (!function_exists('app_config')) {
 }
 
 if (!function_exists('sleekwaredb_mailer')) {
-    function sleekwaredb_mailer($to, $subject, $message, $html = false)
+    /**
+     * It sends an email using PHPMailer
+     *
+     * @param string to The email address of the recipient.
+     * @param string subject The subject of the email
+     * @param string message The message to be sent.
+     * @param array|null data This is the data that will be passed to the view.
+     * @param boolean html If true, the message will be sent as HTML.
+     *
+     * @return boolean A boolean value.
+     */
+    function sleekwaredb_mailer($to, $subject, $message, $data = null, $html = false)
     {
         $CI = &get_instance();
 
         $smtp_host = app_config(['host' => 'configurations.email.smtp.host']);
         $smtp_port = app_config(['port' => 'configurations.email.smtp.port']);
+        $smtp_user = app_config(['user' => 'configurations.email.smtp.user']);
+        $smtp_password = app_config(['password' => 'configurations.email.smtp.password']);
+        $smtp_auth = (!is_null($smtp_user) && !is_null($smtp_password)) ? true : false;
         $from = app_config(['from' => 'configurations.email.from']);
         $fromName = app_config(['fromName' => 'configurations.email.fromName']);
 
@@ -655,12 +733,21 @@ if (!function_exists('sleekwaredb_mailer')) {
             $mail->isSMTP();
             $mail->Host       = $smtp_host;
             $mail->Port       = $smtp_port;
+            if ($smtp_auth) {
+                $mail->SMTPAuth   = $smtp_auth;
+                $mail->Username   = $smtp_user;
+                $mail->Password   = $smtp_password;
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            }
             $mail->setFrom($from, $fromName);
             $mail->addAddress($to);
+            if ($html && !is_null($data)) {
+                $message = $CI->load->view('emails/magic-link', $data, true);
+            }
             $mail->isHTML($html);
             $mail->Subject = $subject;
             $mail->Body    = $message;
-            $mail->AltBody = $message;
+            $mail->AltBody = "Your magic link is: " . $data['magic_link'];
 
             $mail->send();
             log_message('info', 'Email has been sent!');
@@ -673,6 +760,13 @@ if (!function_exists('sleekwaredb_mailer')) {
 }
 
 if (!function_exists('array_keys_multi')) {
+    /**
+     * It returns an array of all the keys in a multi-dimensional array
+     *
+     * @param array array The array to get the keys from.
+     *
+     * @return array The keys of the array.
+     */
     function array_keys_multi(array $array)
     {
         $keys = array();
