@@ -5,7 +5,6 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
-use Rakit\Validation\Rules\Numeric;
 
 if (!function_exists('get_client_ip')) {
 

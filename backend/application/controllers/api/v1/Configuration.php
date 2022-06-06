@@ -87,7 +87,7 @@ class Configuration extends Rest_Controller
         if (!$checkRecoveryCode) {
             $passPharse = random_words();
             $isGenerated = $this->core_user->generateRecoveryCode($username, $email, $passPharse);
-            if ($isGenerated) {
+            if (is_bool($isGenerated) || is_array($isGenerated)) {
                 $response = [
                     'status' => true,
                     'type' => 'success',
@@ -102,7 +102,7 @@ class Configuration extends Rest_Controller
                     'status' => false,
                     'type' => 'error',
                     'code' => Sleekwaredb_Controller::HTTP_INTERNAL_ERROR,
-                    'msg' => 'Recovery code failed generated',
+                    'msg' => 'Recovery code failed generated, username or email not found',
                     'result' => []
                 ];
             }

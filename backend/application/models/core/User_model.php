@@ -179,8 +179,12 @@ class User_model extends Sleekwaredb_model
             ['username', '=', $username],
             ['email', '=', $email],
         ]);
-        $user['recoveryCode'] = $passPharse;
-        return $query->updateOrInsert($user, false);
+        if (!empty($user)) {
+            $user['recoveryCode'] = $passPharse;
+            return $query->updateOrInsert($user, false);
+        } else {
+            return null;
+        }
     }
 
     /**
