@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "description": "SleekwareDB is a NoSQL database storage service. A database storage service that can be used for various platforms and is easy to integrate.",
-  "authors": [{
-	"name": "Imam Ali Mustofa",
-	"email": "darkterminal@pm.me"
-  }],
-  "license": "MIT",			   
+  "authors": [
+    {
+      "name": "Imam Ali Mustofa",
+      "email": "darkterminal@pm.me"
+    }
+  ],
+  "license": "MIT",
   "url": "https://github.com/SleekwareDB/sleekwaredb/issues",
-  "homepage": "https://github.com/SleekwareDB/sleekwaredb#readme",      
+  "homepage": "https://github.com/SleekwareDB/sleekwaredb#readme",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -17,12 +19,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "daisyui": "^2.17.0",
     "next": "12.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.7",
     "eslint": "8.18.0",
-    "eslint-config-next": "12.2.0"
+    "eslint-config-next": "12.2.0",
+    "postcss": "^8.4.14",
+    "tailwindcss": "^3.1.4"
   }
 }
