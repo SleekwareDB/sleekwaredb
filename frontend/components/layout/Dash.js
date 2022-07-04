@@ -45,7 +45,7 @@ export default function Dash() {
                     <Navbar />
                     <Sidebar sideState={false} />
                     <section className="container px-2 py-5 mx-auto mb-3">
-                        <div class="grid grid-cols-4 gap-5">
+                        <div className="grid grid-cols-4 gap-5">
                             <div className="bg-sky-800 h-32 text-white rounded">
                                 <div className="font-bold bg-sky-600 p-3 rounded rounded-br-none rounded-bl-none">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 inline mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -53,12 +53,12 @@ export default function Dash() {
                                     </svg>
                                     Req / Res Status
                                 </div>
-                                <div class="flex w-full">
-                                    <div class="grid h-20 flex-grow place-items-center">
+                                <div className="flex w-full">
+                                    <div className="grid h-20 flex-grow place-items-center">
                                         <div><span className="text-2xl font-extrabold">50</span><sup> / Hours</sup></div>
                                     </div>
-                                    <div class="divider divider-horizontal mx-0"></div>
-                                    <div class="grid h-20 flex-grow place-items-center">
+                                    <div className="divider divider-horizontal mx-0"></div>
+                                    <div className="grid h-20 flex-grow place-items-center">
                                         <div><span className="text-2xl font-extrabold">50</span><sup> / Hours</sup></div>
                                     </div>
                                 </div>
@@ -99,11 +99,11 @@ export default function Dash() {
                         </div>
                     </section>
                     <section className="container px-36 py5 mx-auto mb-3">
-                        <div class="grid grid-cols-5">
+                        <div className="grid grid-cols-5">
                             {
                                 stats.map(item => {
                                     return (
-                                        <div className="flex justify-center items-center">
+                                        <div className="flex justify-center items-center" key={item["--value"]}>
                                             <div className={item.styling} style={item}>{item["--value"]}% <span className="text-sm">{item.label}</span></div>
                                         </div>
                                     )
