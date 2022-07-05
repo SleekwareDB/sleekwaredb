@@ -416,9 +416,9 @@ cssesc@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/cssesc/-/cssesc-3.0.0.tgz"
 
-daisyui@^2.17.0:
-  version "2.17.0"
-  resolved "https://registry.npmjs.org/daisyui/-/daisyui-2.17.0.tgz"
+daisyui@^2.18.0:
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-2.18.0.tgz#02f5721520e1bee3071af05c9aad473f614a0047"
   dependencies:
     color "^4.2"
     css-selector-tokenizer "^0.8.0"
