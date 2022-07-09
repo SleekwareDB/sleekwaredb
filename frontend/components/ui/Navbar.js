@@ -1,10 +1,12 @@
+import { MenuIcon } from '@heroicons/react/outline'
+import Link from 'next/link'
 export default function Navbar() {
     return (
         <>
-            <div className="navbar bg-base-100">
-                <div className="flex-none">
+            <div className="navbar bg-base-100 fixed top-0 left-0 right-0 z-20 shadow-2xl">
+                <div className="flex-none md:hidden lg:hidden">
                     <label className="btn btn-square btn-ghost drawer-button" htmlFor="my-drawer">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                        <MenuIcon className="inline-block w-6 h-6" />
                     </label>
                 </div>
                 <div className="flex-1">
@@ -18,15 +20,24 @@ export default function Navbar() {
                                 Alerts <div className="badge badge-xs badge-accent py-2">1</div>
                                 <svg className="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" /></svg>
                             </a>
-                            <ul className="p-2 bg-base-100">
+                            <ul className="p-2 bg-base-300">
                                 <li><a>Submenu 1</a></li>
                                 <li><a>Submenu 2</a></li>
                             </ul>
                         </li>
-                        <li>
+                        <li tabIndex="0">
                             <div className="w-16">
                                 <img src="https://placeimg.com/80/80/people" className="rounded-full" />
                             </div>
+                            <ul className="p-2 bg-base-300 absolute right-3">
+                                <li><a>Profile</a></li>
+                                <li><a>Settings</a></li>
+                                <li>
+                                    <Link href='/' replace>
+                                        <a>Sign Out</a>
+                                    </Link>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </div>

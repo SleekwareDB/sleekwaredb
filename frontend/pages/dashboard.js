@@ -1,5 +1,8 @@
 import Head from "next/head"
 import Dash from "../components/layout/Dash"
+import SystemStats from "../components/ui/SystemStats"
+import CardStats from "../components/ui/CardStats"
+import RecentQueries from "../components/ui/RecentQueries"
 
 export default function Dashboard() {
     return (
@@ -7,7 +10,11 @@ export default function Dashboard() {
             <Head>
                 <title>Dashboard</title>
             </Head>
-            <Dash />
+            <Dash>
+                <CardStats />
+                <SystemStats />
+                <RecentQueries />
+            </Dash>
         </>
     )
 }
