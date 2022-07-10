@@ -1,0 +1,32 @@
+FROM node:latest AS dependencies
+RUN mkdir -p /home/app
+WORKDIR /home/app
+COPY package.json yarn.lock clean.sh ./
+RUN chmod +x ./clean.sh && ./clean.sh
+RUN yarn cache clean
+RUN set http_proxy= \
+    && set https_proxy= \
+    && yarn config delete proxy \
+    && npm config rm https-proxy \
+    && npm config rm proxy \
+    && npm config set registry "https://registry.npmjs.org"
+RUN yarn install --network-timeout 1000000
+
+FROM node:lts as builder
+WORKDIR /home/app
+COPY . .
+COPY --from=dependencies /home/app/node_modules ./node_modules
+RUN yarn build
+
+FROM node:lts as runner
+WORKDIR /home/app
+ENV NODE_ENV production
+# If you are using a custom next.config.js file, uncomment this line.
+# COPY --from=builder /home/app/next.config.js ./
+COPY --from=builder /home/app/public ./public
+COPY --from=builder /home/app/.next ./.next
+COPY --from=builder /home/app/node_modules ./node_modules
+COPY --from=builder /home/app/package.json ./package.json
+
+EXPOSE 3000
+CMD ["yarn", "start"]
