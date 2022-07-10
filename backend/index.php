@@ -1,4 +1,9 @@
 <?php
+
+require_once 'application/libraries/Dotenv.php';
+$dotenv = new Dotenv(__DIR__);
+$dotenv->load();
+
 /**
  * CodeIgniter
  *
@@ -72,16 +77,16 @@ if ($domain !== 'cli' || $domain !== 'localhost') {
 	 *
 	 * Automatic base url
 	 */
-	define('APP_URL', ($_SERVER['SERVER_PORT'] == 443 ? 'https' : 'http') . "://{$_SERVER['SERVER_NAME']}" . str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']));
+	$url = ($_SERVER['SERVER_PORT'] == 443 ? 'https' : 'http') . "://{$_SERVER['SERVER_NAME']}" . str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
+	$url = rtrim($url, '/');
+	define('APP_URL', $url . ':' . getenv('BACKEND_PORT'));
 } else if ($domain !== 'cli' || $domain === 'localhost') {
 	// Get server port
-	$port = $_SERVER['SERVER_PORT'];
+	$port = getenv('BACKEND_PORT');
 	define('APP_URL', 'http://localhost:' . $port);
 } else {
 	define('APP_URL', 'sleekware.test');
 }
-
-
 
 /*
  *---------------------------------------------------------------
