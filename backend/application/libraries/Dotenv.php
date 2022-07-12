@@ -1,6 +1,4 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
-
 class Dotenv
 {
     /**
@@ -11,10 +9,16 @@ class Dotenv
     protected $path;
 
 
-    public function __construct()
+    public function __construct( $filepath = null )
     {
-        $fileenv = (file_exists(dirname(FCPATH) . DIRECTORY_SEPARATOR . '.env')) ? dirname(FCPATH) . DIRECTORY_SEPARATOR . '.env' : FCPATH . DIRECTORY_SEPARATOR . '.env';
-        $path = $fileenv;
+        if ( is_null($filepath) ) {
+            $fileenv = (file_exists(dirname(FCPATH) . DIRECTORY_SEPARATOR . '.env')) ? dirname(FCPATH) . DIRECTORY_SEPARATOR . '.env' : FCPATH . DIRECTORY_SEPARATOR . '.env';
+            $path = $fileenv;
+        } else {
+            $filepath = str_replace('.env', '', $filepath);
+            $path = $filepath . DIRECTORY_SEPARATOR . '.env';
+        }
+
         if (!file_exists($path)) {
             throw new \InvalidArgumentException(sprintf('%s does not exist', $path));
         }

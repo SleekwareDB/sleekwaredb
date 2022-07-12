@@ -57,7 +57,7 @@ export default function Stats() {
 
     const [data, setData] = useState(chartData)
     const getNewData = () => {
-        let newDatasetsData = [...chartData.datasets[0].data, ...[d]]
+        let newDatasetsData = [...chartData.datasets[0].data, ...[19]]
         let newLabels = [...chartData.labels, ...['August']]
         setData({
             labels: newLabels,

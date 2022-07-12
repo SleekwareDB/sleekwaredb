@@ -47,7 +47,6 @@ class Sleekwaredb_Controller extends CI_Controller
         $this->load->helper($this->helpers);
 
         $this->encryption->initialize(array('driver' => 'openssl'));
-        $this->dotenv->load();
         date_default_timezone_set(getenv('TIME_ZONE'));
 
         $this->form_data = ($this->input->method() == 'post') ? $this->input->post(null, true) : $this->input->get(null,  true);
