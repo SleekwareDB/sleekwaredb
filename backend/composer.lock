@@ -393,16 +393,16 @@
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v6.6.3",
+            "version": "v6.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "9400f305a898f194caff5521f64e5dfa926626f3"
+                "reference": "80fc8686fcd070267b98dae0ec228d5d67d94310"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/9400f305a898f194caff5521f64e5dfa926626f3",
-                "reference": "9400f305a898f194caff5521f64e5dfa926626f3",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/80fc8686fcd070267b98dae0ec228d5d67d94310",
+                "reference": "80fc8686fcd070267b98dae0ec228d5d67d94310",
                 "shasum": ""
             },
             "require": {
@@ -418,16 +418,17 @@
                 "php-parallel-lint/php-parallel-lint": "^1.3.2",
                 "phpcompatibility/php-compatibility": "^9.3.5",
                 "roave/security-advisories": "dev-latest",
-                "squizlabs/php_codesniffer": "^3.6.2",
+                "squizlabs/php_codesniffer": "^3.7.1",
                 "yoast/phpunit-polyfills": "^1.0.0"
             },
             "suggest": {
                 "ext-mbstring": "Needed to send email in multibyte encoding charset or decode encoded addresses",
+                "greew/oauth2-azure-provider": "Needed for Microsoft Azure XOAUTH2 authentication",
                 "hayageek/oauth2-yahoo": "Needed for Yahoo XOAUTH2 authentication",
                 "league/oauth2-google": "Needed for Google XOAUTH2 authentication",
                 "psr/log": "For optional PSR-3 debug logging",
-                "stevenmaguire/oauth2-microsoft": "Needed for Microsoft XOAUTH2 authentication",
-                "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)"
+                "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)",
+                "thenetworg/oauth2-azure": "Needed for Microsoft XOAUTH2 authentication"
             },
             "type": "library",
             "autoload": {
@@ -459,7 +460,7 @@
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "support": {
                 "issues": "https://github.com/PHPMailer/PHPMailer/issues",
-                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.6.3"
+                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.7"
             },
             "funding": [
                 {
@@ -467,7 +468,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-06-20T09:21:02+00:00"
+            "time": "2022-12-05T10:56:35+00:00"
         },
         {
             "name": "psr/http-client",
