@@ -1,7 +1,7 @@
 name: Documentation
 description: Things about the documentation
-title: "[Docs]: "
-labels: ["📄 aspect: text"]
+title: "[DOCS]: "
+labels: ["documentation"]
 body:
   - type: markdown
     attributes:
@@ -14,3 +14,10 @@ body:
       description: What should be updated in the documentation?
     validations:
       required: true
+  - type: textarea
+    id: extrainfo
+    attributes:
+      label: Additional information
+      description: Is there anything else we should know about this issue?
+    validations:
+      required: false
